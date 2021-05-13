@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" href="{% static 'build/css/global.css' %}">
+  <script src="{% static 'src/js/ajax.js'%}"></script>
+  <title>Webtech</title>
+</head>
+<body>
+  <h1>Welcome to Webtech</h1>
+  <p>Please upload a csv file</p>
+  <form id="inputForm" enctype="multipart/form-data">
+    <input type="file" name="csv_data" accept=".csv">
+  </form>
+  <button onclick="getData()">Submit</button>
+  <p id="sizeP" class="hidden">Your file was <strong id="sizeSpan"></strong> bytes!</p>
+</body>
+</html>
