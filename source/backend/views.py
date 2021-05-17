@@ -1,7 +1,7 @@
 
 from django.shortcuts import render
-# from django.http import JsonResponse
-from django.http import HttpResponse
+from django.http import JsonResponse
+# from django.http import HttpResponse
 
 def index(request):
     return render(request, 'index.html')
@@ -17,8 +17,9 @@ def baseData(request):
     from bokeh.plotting import figure
     from bokeh.models.graphs import from_networkx
     from bokeh.transform import linear_cmap
-    from bokeh.embed import file_html
-    from bokeh.resources import CDN
+    from bokeh.embed import json_item
+    # from bokeh.resources import CDN
+    import json
 
     df_enron = pd.read_csv(request.FILES['csv_data'])
 
@@ -61,7 +62,8 @@ def baseData(request):
 
     plot = figure(tooltips = TOOLTIPS,
                 tools="pan,zoom_in,wheel_zoom,save,reset,box_select,undo", active_scroll='wheel_zoom',
-                x_range=Range1d(-20,20), y_range=Range1d(-20,20),  title='Email')
+                x_range=Range1d(-20,20), y_range=Range1d(-20,20),  title='Emails',
+                plot_width=880, plot_height=880)
 
     N_graph = from_networkx(G, networkx.spring_layout, scale=100)
 
@@ -74,6 +76,6 @@ def baseData(request):
 
     plot.renderers.append(N_graph)
 
-    html = file_html(plot, CDN, "Base Data Plot")
+    item_text = json.dumps(json_item(plot))
 
-    return HttpResponse(html)
+    return JsonResponse(item_text, safe=False)

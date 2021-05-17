@@ -8,6 +8,24 @@ h1 {
   text-align: center;
 }
 
+input, button {
+  background-color: #fff;
+  border: 1px solid #fff;
+  color: rgb(25, 16, 61);
+  cursor: pointer;
+}
+
+button {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  padding: 0.25rem 1rem;
+  transition: transform 150ms ease-in-out;
+  &:hover,
+  &:focus {
+    transform: scale(0.95);
+  }
+}
+
 .hidden {
   display: none;
 }
@@ -15,4 +33,14 @@ h1 {
 section.small {
   max-width: 30rem;
   margin: 0 auto;
+}
+
+.bk-canvas-events .bk {
+  left: unset !important;
+  right: 0 !important;
+}
+
+.bk-root > .bk {
+  margin: 0 auto !important;
+  margin-top: 40px !important;
 }
