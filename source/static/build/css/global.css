@@ -8,3 +8,7 @@ h1 {
 
 .hidden {
   display: none; }
+
+section.small {
+  max-width: 30rem;
+  margin: 0 auto; }
