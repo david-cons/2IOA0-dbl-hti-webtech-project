@@ -7,8 +7,8 @@ year 1 dbl project
 2. Clone the project: `git clone https://github.com/david-cons/2IOA0-dbl-hti-webtech-project`
 3. Go to the directory: `cd 2IOA0-dbl-hti-webtech-project/source`
 4. Install Python
-5. Install pipenv to use local libraries and not bloat your system `pip install pipenv` (you may need to add it to your PATH)
-6. Install libaries `pipenv install django pandas networkx bokeh IPython matplotlib Chord requests`
+5. Install pipenv to use a sort of virtual environment `pip install pipenv` (you may need to add it to your PATH)
+6. Install libaries `pipenv install`
 7. Run the server: `python manage.py runserver`
 8. Open a browser and go to port 8000: http://127.0.0.1:8000/
 
