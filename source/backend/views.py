@@ -1,76 +1,71 @@
 
 from django.shortcuts import render
 from django.http import JsonResponse
-# from django.http import HttpResponse
+from django.http import HttpResponse
+import django.http
+import json
 
 def index(request):
     return render(request, 'index.html')
 
-def baseData(request):
+def fullSizeGraph(request):
     import pandas as pd
     import networkx
-    from bokeh.models import Range1d, Circle, ColumnDataSource, MultiLine
-    from bokeh.plotting import figure
-    from bokeh.palettes import Reds8
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+
+    df_enron = pd.read_csv(request.FILES['csv_data'])
+
     from bokeh.io import output_notebook, show, save
     from bokeh.models import Range1d, Circle, ColumnDataSource, MultiLine
     from bokeh.plotting import figure
     from bokeh.models.graphs import from_networkx
+    from bokeh.palettes import Category10
     from bokeh.transform import linear_cmap
     from bokeh.embed import json_item
-    # from bokeh.resources import CDN
-    import json
 
-    df_enron = pd.read_csv(request.FILES['csv_data'])
+    output_notebook() #remove this when not using notebook
 
-    G = networkx.from_pandas_edgelist(df_enron, 'fromEmail', 'toEmail', edge_attr=True)
+    G = networkx.from_pandas_edgelist(df_enron, 'fromId', 'toId', edge_attr=True)
 
-    TOOLTIPS = [("email", "@index")]
-    plot = figure(tooltips = TOOLTIPS,
-                tools="pan,wheel_zoom,save,reset", active_scroll='wheel_zoom',
-                x_range=Range1d(-10, 10), y_range=Range1d(-10, 10), title='Email')
-
-
-    #network_graph = from_networkx(G2, networkx.spring_layout, scale=50, center=(0, 0))
-
-    #Set node size and color
-    #network_graph.node_renderer.glyph = Circle(size=10, fill_color='red')
-
-    #Set edge opacity and width
-    #network_graph.edge_renderer.glyph = MultiLine(line_alpha=0.5, line_width=1)
-
-    #Add network graph to the plot
-    #plot.renderers.append(network_graph)
+    di = {'CEO':1,'Director':2,'Employee':3,'In House Lawyer':4,'Manager':5,'Managing Director':6,'President':7,'Trader':8,'Unknown':9,'Vice President':10}
+    df_rejob = df_enron.replace({"fromJobtitle": di})
+    df_attributes = df_enron[['fromId', 'fromJobtitle']].drop_duplicates()
+    df_attributes.columns = ['fromId', 'job']
+    df_attributesx = df_rejob[['fromId', 'fromJobtitle']].drop_duplicates()
+    job = df_attributes.set_index('fromId').to_dict('i')
+    jobx = df_attributesx.set_index('fromId').to_dict('i')
+    networkx.set_node_attributes(G, job)
+    networkx.set_node_attributes(G, jobx)
+    #jobs = ['Employee','Vice President','Unknown','Manager','CEO','Trader','Director','President','Managing Director','In House Lawyer']
 
     degrees = dict(networkx.degree(G))
-    adjusted_node_size = dict([(node, (degree + 5) - ((degree + 5)*0.3) ) for node, degree in networkx.degree(G)])
     networkx.set_node_attributes(G, name='degree', values=degrees)
+    adjusted_node_size = dict([(node, (degree + 5) - ((degree + 5)*0.3) ) for node, degree in networkx.degree(G)])
     networkx.set_node_attributes(G, name='adjusted_node_size', values=adjusted_node_size)
 
     size_by_this_attribute = 'adjusted_node_size'
-    color_by_this_attribute = 'adjusted_node_size'
+    color_by_this_attribute = 'fromJobtitle'
 
-    color_palette = Reds8
-
-    networkx.set_node_attributes(G, name='degree', values=degrees)
+    color_palette = Category10[10]
 
     TOOLTIPS = [
-        ("Email address", "@index"),
-            ("sent email address", "@degree"),
+        ("Person ID", "@index"),
+            ("people communicated with", "@degree"),
             ("Jobtitle","@job"),
     ]
 
     plot = figure(tooltips = TOOLTIPS,
                 tools="pan,zoom_in,wheel_zoom,save,reset,box_select,undo", active_scroll='wheel_zoom',
-                x_range=Range1d(-20,20), y_range=Range1d(-20,20),  title='Emails',
+                x_range=Range1d(-20,20), y_range=Range1d(-20,20),  title='Enron Emails',
                 plot_width=880, plot_height=880)
+    plot.axis.visible = False
 
     N_graph = from_networkx(G, networkx.spring_layout, scale=100)
 
-    minimum_value_color = min(N_graph.node_renderer.data_source.data[color_by_this_attribute])
-    maximum_value_color = max(N_graph.node_renderer.data_source.data[color_by_this_attribute])
-    N_graph.node_renderer.glyph = Circle(size=size_by_this_attribute, fill_color=linear_cmap(color_by_this_attribute, color_palette, maximum_value_color,minimum_value_color))
-
+    N_graph.node_renderer.glyph = Circle(size=size_by_this_attribute,
+                                        fill_color=linear_cmap(color_by_this_attribute, color_palette, 1, 10))
 
     N_graph.edge_renderer.glyph = MultiLine(line_alpha=10, line_width=1)
 
@@ -78,4 +73,23 @@ def baseData(request):
 
     item_text = json.dumps(json_item(plot))
 
-    return JsonResponse(item_text, safe=False)
+    return django.http.JsonResponse(item_text, safe=False)
+
+def chordDiagram(request):
+    import numpy as np
+    import pandas as pd
+    from chord import Chord
+
+    df_enron = pd.read_csv(request.FILES['csv_data'])
+    names = ['Managing Director', 'In House Lawyer', 'Vice President', 'Employee', 'Unknown', 'Manager', 'Director', 'Trader', 'CEO', 'President']
+
+    df_chord = df_enron.groupby(['fromJobtitle', 'toJobtitle'])['date'].count()
+    df_chord = df_chord.unstack().fillna(0).astype(int)
+    df_chord = df_chord.reindex(names)
+    df_chord = df_chord[names]
+
+    matrix = df_chord.values.tolist()
+
+    print(Chord(matrix, names, wrap_labels=False))
+
+    return HttpResponse(Chord(matrix, names, wrap_labels=False).to_html())

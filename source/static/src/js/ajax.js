@@ -1,10 +1,15 @@
 const roodId = 'BaseDataPlot'
 const root = document.querySelector('#'+roodId)
 
-const getData = () => {
+const makeFormDataFromCsvInput = () => {
   const formData = new FormData();
   const files = document.querySelector('#inputForm [name=csv_data]').files;
   formData.append('csv_data', files[0])
+  return formData
+}
+
+const getFullSizeGraph = () => {
+  const formData = makeFormDataFromCsvInput()
 
   const xhttp = new XMLHttpRequest();
 
@@ -16,7 +21,20 @@ const getData = () => {
       .then(resizePlot)
   })
 
-  xhttp.open("POST", "/base-data", true);
+  xhttp.open("POST", "/full-size-graph", true);
+  xhttp.send(formData);
+}
+
+const getChordDiagram = () => {
+  const formData = makeFormDataFromCsvInput()
+
+  const xhttp = new XMLHttpRequest();
+
+  xhttp.addEventListener('load', function (event) {
+    console.log(event.target.response)
+  })
+
+  xhttp.open("POST", "/chord-diagram", true);
   xhttp.send(formData);
 }
 

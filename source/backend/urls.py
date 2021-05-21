@@ -20,5 +20,6 @@ from . import views
 urlpatterns = [
     path('', views.index),
     path('index', views.index),
-    path('base-data', views.baseData)
+    path('full-size-graph', views.fullSizeGraph),
+    path('chord-diagram', views.chordDiagram)
 ]
