@@ -2,12 +2,14 @@
 year 1 dbl project
 
 ## To run on your computer:
-0. Open an empty directory with an IDE (VS Code)
+0. Open a directory with an IDE (VS Code)
 1. Install git: https://git-scm.com/download/win
 2. Clone the project: `git clone https://github.com/david-cons/2IOA0-dbl-hti-webtech-project`
-3. Go to the source directory: `cd 2IOA0-dbl-hti-webtech-project/source`
-4. Install python and Django (version 3.2.2): https://docs.djangoproject.com/en/3.2/intro/install/
-5. Install libaries `pip install pandas networkx bokeh`
+3. Go to the directory: `cd 2IOA0-dbl-hti-webtech-project`
+4. Install Python
+5. Make a virtual environment: `python3 -m venv venv`
+6. Activate the virtual environment: `source venv/bin/activate` (If you are on windows you need to go into Bash or activate it another way)
+5. Install libaries `pip install django pandas networkx bokeh`
 6. Run the server: `python manage.py runserver`
 7. Open a browser and go to port 8000: http://127.0.0.1:8000/
 
