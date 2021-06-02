@@ -44,3 +44,89 @@ section.small {
   margin: 0 auto !important;
   margin-top: 40px !important;
 }
+
+.doubleSlider {
+  padding: 1px 0 1rem 0;
+  .handWrap {
+    background-color: rgba(255, 255, 255, 0.5);
+    height: 0.25rem;
+    margin: 1rem;
+    position: relative;
+    .hand {
+      position: absolute;
+      top: -0.875rem;
+      width: 2rem;
+      height: 2rem;
+      border-top: 1rem solid transparent;
+      border-bottom: 1rem solid transparent;
+      box-sizing: border-box;
+      user-select: none;
+      &.leftHand {
+        border-left: 1rem solid #fff;
+        left: -1rem;
+      }
+      &.rightHand {
+        border-right: 1rem solid #fff;
+        right: -1rem;
+      }
+    }
+    .highlight {
+      position: absolute;
+      background-color: #fff;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .inputWrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    input {
+      width: 5rem;
+    }
+    .maxValue {
+      text-align: right;
+    }
+    button {
+      margin: 0;
+    }
+  }
+}
+
+p.error {
+  color : red;
+  background-color: rgb(255, 233, 237);
+  padding: 0.5rem;
+  &.hidden {
+    display: none;
+  }
+}
+
+.loading {
+  width: 100%;
+  height: 20rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  .inner {
+    width: 3rem;
+    height: 3rem;
+    border: 0.5rem solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 2000ms linear infinite;
+  }
+  &.hidden {
+    display: none;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  } to {
+    transform: rotate(360deg);
+  }
+}

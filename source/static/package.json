@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node-sass-chokidar ./src -o ./build"
+    "build": "node-sass-chokidar ./src -o ./build",
+    "watch": "nodemon -e scss -x npm run build"
   },
   "author": "",
   "license": "ISC",

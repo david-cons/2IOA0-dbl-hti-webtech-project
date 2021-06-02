@@ -59,7 +59,7 @@ def fullSizeGraph(request):
     plot = figure(tooltips = TOOLTIPS,
                 tools="pan,zoom_in,wheel_zoom,save,reset,box_select,undo", active_scroll='wheel_zoom',
                 x_range=Range1d(-20,20), y_range=Range1d(-20,20),  title='Enron Emails',
-                plot_width=880, plot_height=880)
+                plot_width=950, plot_height=950)
     plot.axis.visible = False
 
     N_graph = from_networkx(G, networkx.spring_layout, scale=100)

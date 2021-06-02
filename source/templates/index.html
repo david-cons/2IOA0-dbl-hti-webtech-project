@@ -9,23 +9,40 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"> 
   <link rel="stylesheet" href="{% static 'build/css/global.css' %}"> <!-- COMPILED FILE -> DO NOT CHANGE THIS FILE BY HAND -->
   <script defer src="{% static 'src/js/ajax.js'%}"></script>
+  <script defer src="{% static 'src/js/doubleSlider.js'%}"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.2.min.js"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.3.2.min.js"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.3.2.min.js"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-api-2.3.2.min.js"></script>
   <title>Webtech</title>
+  <link rel="icon" type="image/png" href="{% static 'favicon.png'%}">
 </head>
 <body>
-  <h1>Welcome to Webtech</h1>
+  <h1>Welcome to Webtech #13</h1>
   <section class="small">
-    <p>Please upload a csv file</p>
     <form id="inputForm" enctype="multipart/form-data">
+      <p>Please upload a csv file</p>
       <input type="file" name="csv_data" accept=".csv">
+      <p>Opionally select a time span</p>
+      <div class="doubleSlider">
+        <div class="handWrap">
+          <div class="highlight"></div>
+          <div class="leftHand hand"></div>
+          <div class="rightHand hand"></div>
+        </div>
+        <div class="inputWrap">
+          <input type="text" class="minValue" readonly>
+          <button class="allTimeButton">All Time</button>
+          <input type="text" class="maxValue" readonly>
+        </div>
+      </div>
     </form>
     <button onclick="getFullSizeGraph()">Show Graph</button>
     <!-- <button onclick="getChordDiagram()">Show Chord Diagram</button> -->
+    <p class="error hidden"></p>
     <p id="sizeP" class="hidden">Your file was <strong id="sizeSpan"></strong> bytes!</p>
   </section>
+  <div id="loading" class="loading hidden"><div class="inner"></div></div>
   <div id="BaseDataPlot" class="hidden"></div>
 </body>
 </html>
