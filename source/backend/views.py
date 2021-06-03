@@ -107,3 +107,6 @@ def chordDiagram(request):
     print(Chord(matrix, names, wrap_labels=False))
 
     return HttpResponse(Chord(matrix, names, wrap_labels=False).to_html())
+
+def individualInfo(request):
+    return HttpResponse('Info for node '+request.POST['node_id'])

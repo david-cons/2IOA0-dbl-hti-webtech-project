@@ -21,5 +21,6 @@ urlpatterns = [
     path('', views.index),
     path('index', views.index),
     path('full-size-graph', views.fullSizeGraph),
-    path('chord-diagram', views.chordDiagram)
+    path('chord-diagram', views.chordDiagram),
+    path('individual-info', views.individualInfo)
 ]
