@@ -21,7 +21,7 @@ button {
     transform: scale(0.95); }
 
 .hidden {
-  display: none; }
+  display: none !important; }
 
 section.small {
   max-width: 30rem;
@@ -32,8 +32,7 @@ section.small {
   right: 0 !important; }
 
 .bk-root > .bk {
-  margin: 0 auto !important;
-  margin-top: 40px !important; }
+  margin: 0 auto !important; }
 
 .doubleSlider {
   padding: 1px 0 1rem 0; }
@@ -79,8 +78,6 @@ p.error {
   color: red;
   background-color: #ffe9ed;
   padding: 0.5rem; }
-  p.error.hidden {
-    display: none; }
 
 .loading {
   width: 100%;
@@ -95,11 +92,31 @@ p.error {
     border-top-color: transparent;
     border-radius: 50%;
     animation: spin 2000ms linear infinite; }
-  .loading.hidden {
-    display: none; }
 
 @keyframes spin {
   from {
     transform: rotate(0); }
   to {
     transform: rotate(360deg); } }
+
+.mainRow {
+  max-width: 140vh;
+  margin: 4rem auto 0;
+  display: flex;
+  justify-content: space-evenly; }
+  .mainRow .right {
+    padding-left: 3rem;
+    width: 40%;
+    flex-grow: 0;
+    max-width: 30rem; }
+
+#meta {
+  margin-top: 0; }
+  #meta .email {
+    font-weight: 700; }
+
+.text-right {
+  text-align: right; }
+
+table {
+  width: 100%; }

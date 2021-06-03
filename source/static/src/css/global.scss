@@ -27,7 +27,7 @@ button {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 section.small {
@@ -42,7 +42,6 @@ section.small {
 
 .bk-root > .bk {
   margin: 0 auto !important;
-  margin-top: 40px !important;
 }
 
 .doubleSlider {
@@ -99,9 +98,6 @@ p.error {
   color : red;
   background-color: rgb(255, 233, 237);
   padding: 0.5rem;
-  &.hidden {
-    display: none;
-  }
 }
 
 .loading {
@@ -118,9 +114,6 @@ p.error {
     border-radius: 50%;
     animation: spin 2000ms linear infinite;
   }
-  &.hidden {
-    display: none;
-  }
 }
 
 @keyframes spin {
@@ -129,4 +122,31 @@ p.error {
   } to {
     transform: rotate(360deg);
   }
+}
+
+.mainRow {
+  max-width: 140vh;
+  margin: 4rem auto 0;
+  display: flex;
+  justify-content: space-evenly;
+  .right {
+    padding-left: 3rem;
+    width: 40%;
+    flex-grow: 0;
+    max-width: 30rem;
+  }
+}
+
+#meta {
+  margin-top: 0;
+  .email {
+    font-weight: 700;
+  }
+}
+
+.text-right {
+  text-align: right;
+}
+table {
+  width: 100%;
 }
