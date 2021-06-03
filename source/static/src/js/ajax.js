@@ -3,14 +3,12 @@ const root = document.querySelector('#'+roodId)
 const errorP = document.querySelector('p.error')
 const loading = document.querySelector('#loading')
 
-const makeFormDataFromCsvInput = () => {
-  const formData = new FormData();
+const makeFormDataFromCsvInput = (formData) => {
   const files = document.querySelector('#inputForm [name=csv_data]').files;
   if (!files.length || files[0].type !== 'text/csv') {
     throw 'Please upload a csv file'
   }
   formData.append('csv_data', files[0])
-  return formData
 }
 
 const getFullSizeGraph = () => {
@@ -19,9 +17,13 @@ const getFullSizeGraph = () => {
   root.classList.remove('hidden')
   loading.classList.remove('hidden')
 
-  let formData
+  let formData = new FormData()
+
+  formData.append('start_date', document.querySelector('.minValue').getAttribute('data-date'))
+  formData.append('end_date', document.querySelector('.maxValue').getAttribute('data-date'))
+
   try {
-    formData = makeFormDataFromCsvInput()
+    makeFormDataFromCsvInput(formData)
   } catch (e) {
     showFormError(e)
     loading.classList.add('hidden')

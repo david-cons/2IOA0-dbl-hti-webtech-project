@@ -17,7 +17,7 @@ def fullSizeGraph(request):
 
     df_enron = pd.read_csv(request.FILES['csv_data'])
 
-    from bokeh.io import output_notebook, show, save
+    #from bokeh.io import output_notebook, show, save
     from bokeh.models import Range1d, Circle, ColumnDataSource, MultiLine
     from bokeh.plotting import figure
     from bokeh.models.graphs import from_networkx
@@ -25,7 +25,7 @@ def fullSizeGraph(request):
     from bokeh.transform import linear_cmap
     from bokeh.embed import json_item
 
-    output_notebook() #remove this when not using notebook
+    #output_notebook() #remove this when not using notebook
 
     G = networkx.from_pandas_edgelist(df_enron, 'fromId', 'toId', edge_attr=True)
 
