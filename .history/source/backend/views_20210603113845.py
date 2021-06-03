@@ -7,12 +7,12 @@ import django.http
 import json
 
 def filterDataByTime(request, data):
-    startDate = "empty"
-    endDate = "empty"
-    #form = timeForm(request.POST or None)
-    #if form.is_valid():
-    startDate = request.POST["start_date"]
-    endDate = request.POST["end_date"]
+    startDate = ""
+    endDate = ""
+    form = timeForm(request.POST or None)
+    if form.is_valid():
+        startDate = form.cleaned_data.get("startDate")
+        endDate = form.cleaned_data.get("endDate")
     print(startDate) 
     print(endDate)
 

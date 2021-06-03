@@ -9,10 +9,10 @@ import json
 def filterDataByTime(request, data):
     startDate = "empty"
     endDate = "empty"
-    #form = timeForm(request.POST or None)
+    form = timeForm(request.POST or None)
     #if form.is_valid():
-    startDate = request.POST["start_date"]
-    endDate = request.POST["end_date"]
+    startDate = form.get("startDate")
+    endDate = form.get("endDate")
     print(startDate) 
     print(endDate)
 

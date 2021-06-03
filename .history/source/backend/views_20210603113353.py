@@ -7,16 +7,12 @@ import django.http
 import json
 
 def filterDataByTime(request, data):
-    startDate = "empty"
-    endDate = "empty"
-    #form = timeForm(request.POST or None)
-    #if form.is_valid():
-    startDate = request.POST["start_date"]
-    endDate = request.POST["end_date"]
-    print(startDate) 
-    print(endDate)
+    form = timeForm(request.POST or None)
+    if form.is_valid():
+        startDate = form.cleaned_data.get("startDate")
+        endDate = form.cleaned_data.get("endDate")
 
-    return data[ ((data["date"]>=startDate) & (data["date"] <= endDate)) ]
+    return data[ ((data[date]>=startDate) & (data[date] < endDate)) ]
         
 
 
@@ -30,7 +26,7 @@ def fullSizeGraph(request):
     import matplotlib.pyplot as plt
     import numpy as np
 
-    df_enron = filterDataByTime(request,pd.read_csv(request.FILES['csv_data']))
+    df_enron = filterDataByTime(pd.read_csv(request,request.FILES['csv_data']))
 
     #from bokeh.io import output_notebook, show, save
     from bokeh.models import Range1d, Circle, ColumnDataSource, MultiLine
