@@ -2,12 +2,14 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"> 
-  <link rel="stylesheet" href="{% static 'build/css/global.css' %}"> <!-- COMPILED FILE -> DO NOT CHANGE THIS FILE BY HAND -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'build/css/global.css' %}">
+  <!-- COMPILED FILE -> DO NOT CHANGE THIS FILE BY HAND -->
   <script defer src="{% static 'src/js/ajax.js'%}"></script>
   <script defer src="{% static 'src/js/doubleSlider.js'%}"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.2.min.js"></script>
@@ -17,6 +19,7 @@
   <title>Webtech</title>
   <link rel="icon" type="image/png" href="{% static 'favicon.png'%}">
 </head>
+
 <body>
   <h1>Welcome to Webtech #13</h1>
   <section class="small">
@@ -42,7 +45,10 @@
     <p class="error hidden"></p>
     <p id="sizeP" class="hidden">Your file was <strong id="sizeSpan"></strong> bytes!</p>
   </section>
-  <div id="loading" class="loading hidden"><div class="inner"></div></div>
+  <div id="loading" class="loading hidden">
+    <div class="inner"></div>
+  </div>
   <div id="BaseDataPlot" class="hidden"></div>
 </body>
+
 </html>

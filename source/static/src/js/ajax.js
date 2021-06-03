@@ -40,6 +40,8 @@ const getFullSizeGraph = () => {
       return
     }
 
+    console.log(JSON.parse(JSON.parse(event.target.response)))
+
     Bokeh.embed.embed_item(JSON.parse(JSON.parse(event.target.response)), roodId)
       .then(resizePlot)
   })
@@ -49,7 +51,9 @@ const getFullSizeGraph = () => {
 }
 
 const getChordDiagram = () => {
-  const formData = makeFormDataFromCsvInput()
+  const formData = new FormData()
+  
+  makeFormDataFromCsvInput(formData)
 
   const xhttp = new XMLHttpRequest();
 
@@ -62,12 +66,13 @@ const getChordDiagram = () => {
 }
 
 const resizePlot = () => {
-  const maxHeight = window.innerHeight
-  const maxWidth = window.innerWidth
-  const size = Math.min(maxHeight, maxWidth) - 50
-  const wrap = document.querySelector('.bk-root > .bk')
-  wrap.style.width = size + 'px'
-  wrap.style.height = size + 'px'
+  // const maxHeight = window.innerHeight
+  // const maxWidth = window.innerWidth
+  // const size = Math.min(maxHeight, maxWidth) - 50
+  // const wrap = document.querySelector('.bk-root > .bk')
+  // //wrap.style.width = size + 'px'
+  // //wrap.style.height = size + 'px'
+  // wrap.style.transform = 'scale('+ (size / 950) +')'
   root.scrollIntoView({behavior: 'smooth'})
 }
 
@@ -77,3 +82,18 @@ function showFormError(text) {
   errorP.classList.remove('hidden')
   errorP.textContent = text;
 }
+
+root.addEventListener('mouseup', function (e) {
+  const formData = new FormData()
+  formData.append('node_id', document.querySelector('.bk-tooltip .bk .bk .bk-tooltip-row-value span').innerHTML)
+  makeFormDataFromCsvInput(formData)
+
+  const xhttp = new XMLHttpRequest();
+
+  xhttp.addEventListener('load', function (event) {
+    console.log(event.target.response)
+  })
+
+  xhttp.open("POST", "/individual-info", true);
+  xhttp.send(formData);
+})
