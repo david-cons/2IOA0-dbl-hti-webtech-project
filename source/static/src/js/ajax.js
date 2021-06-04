@@ -9,7 +9,7 @@ const right = document.querySelector('.mainRow > .right')
 
 const makeFormDataFromCsvInput = (formData) => {
   const files = document.querySelector('#inputForm [name=csv_data]').files;
-  if (!files.length || files[0].type !== 'text/csv') {
+  if (!files.length || (files[0].type !== 'text/csv' && files[0].type !== 'application/vnd.ms-excel')) {
     throw 'Please upload a csv file'
   }
   formData.append('csv_data', files[0])
