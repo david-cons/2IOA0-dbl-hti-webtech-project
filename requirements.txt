@@ -1,0 +1,8 @@
+django==3.2.3
+pandas==1.2.4
+networkx==2.5.1
+bokeh==2.3.2
+ipython==7.20.0
+matplotlib==3.4.2
+chord==1.0.1
+requests==2.25.1
