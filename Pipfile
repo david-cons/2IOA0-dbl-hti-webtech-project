@@ -12,6 +12,7 @@ ipython = "*"
 matplotlib = "*"
 chord = "*"
 requests = "*"
+gunicorn = "*"
 
 [dev-packages]
 
