@@ -1,1 +1,1 @@
-web: gunicorn manage:runserver
+web: gunicorn backend.wsgi
