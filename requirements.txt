@@ -6,3 +6,4 @@ ipython==7.20.0
 matplotlib==3.4.2
 chord==1.0.1
 requests==2.25.1
+gunicorn==20.1.0
