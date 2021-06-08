@@ -25,7 +25,7 @@ SECRET_KEY = 'emi-b-e(jyzx2tp=^35clzfrdvo^n&(my1pkxr7td@i7dn%qtf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['webtech-group-13.herokuapp.com']
 
 
 # Application definition
