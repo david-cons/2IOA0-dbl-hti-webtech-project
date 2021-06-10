@@ -18,15 +18,15 @@ const initTimeSlider = (dateRangeInit) => {
 }
 
 for (let i = 0; i < hands.length; i++) {
-  hands[i].addEventListener('mousedown', function (e) {
+  hands[i].addEventListener('mousedown', e => {
     currentHand = e.target
   })
 }
-document.addEventListener('mouseup', function (e) {
+document.addEventListener('mouseup', e => {
   currentHand = null
 })
 
-function handleMouseMove(e) {
+const handleMouseMove = e => {
   if (currentHand) {
     let sliderWidth = slider.getBoundingClientRect().width
     let x0 = slider.getBoundingClientRect().left;
@@ -59,7 +59,7 @@ function handleMouseMove(e) {
   }
 }
 
-function generateDateRange(timeData) {
+const generateDateRange = timeData => {
   let dates = []
   for (let year = timeData.startYear, month = timeData.startMonth;
       year < timeData.endYear || (year === timeData.endYear && month <= timeData.endMonth);
@@ -76,7 +76,7 @@ function generateDateRange(timeData) {
   return dates
 }
 
-function resetInputs() {
+const resetInputs = () => {
   const startDate = dateRange[0]
   minValue.value = startDate.humanValue
   minValue.setAttribute('data-date', startDate.value + '-00')
@@ -85,7 +85,7 @@ function resetInputs() {
   maxValue.setAttribute('data-date', endDate.value + '-32')
 }
 
-document.querySelector('.allTimeButton').addEventListener('click', function (e) {
+document.querySelector('.allTimeButton').addEventListener('click', e => {
   e.preventDefault()
   resetInputs()
   leftHand.style.left = ''
