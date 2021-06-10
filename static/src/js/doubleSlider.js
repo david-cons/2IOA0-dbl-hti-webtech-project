@@ -52,7 +52,7 @@ const handleMouseMove = e => {
       minValue.setAttribute('data-date', date.value+'-00')
     }
     if (rightX) {
-      const date = dateRange[Math.ceil((dateRange.length + 2) * (rightX + 16) / sliderWidth)]
+      const date = dateRange[Math.ceil((dateRange.length + 2) * (rightX) / sliderWidth)]
       maxValue.value = date.humanValue
       maxValue.setAttribute('data-date', date.value+'-32')
     }

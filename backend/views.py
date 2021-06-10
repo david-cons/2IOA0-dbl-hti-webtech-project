@@ -119,10 +119,8 @@ def chordDiagram(request):
     return HttpResponse(Chord(matrix, names, wrap_labels=False).to_html())
 
 def individualInfo(request):
-    import numpy as np
     import pandas as pd
 
-    import matplotlib as mpl
     import matplotlib.pyplot as plt
 
     plt.rcParams['figure.figsize'] = [10, 5]  # default hor./vert. size of plots, in inches
@@ -137,10 +135,10 @@ def individualInfo(request):
     warnings.filterwarnings("ignore", category=FutureWarning)
 
     df_enron = pd.read_csv(request.FILES['csv_data'])
-    Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received = getIndividualInfoInner(df_enron, int(request.POST['person_id']))
+    Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, array_mails_sent, array_mails_received = getIndividualInfoInner(df_enron, int(request.POST['person_id']))
     
     df_enron_tf = filterDataByTime(request,df_enron)
-    Person_ID_1_tf, ID_mail_tf, job_title_tf, mails_send_tf, mean_sentiment_send_tf, min_sentiment_send_tf, max_sentiment_send_tf, mails_received_tf, mean_sentiment_received_tf, min_sentiment_received_tf, max_sentiment_received_tf = getIndividualInfoInner(df_enron_tf, int(request.POST['person_id']))
+    Person_ID_1_tf, ID_mail_tf, job_title_tf, mails_send_tf, mean_sentiment_send_tf, min_sentiment_send_tf, max_sentiment_send_tf, mails_received_tf, mean_sentiment_received_tf, min_sentiment_received_tf, max_sentiment_received_tf, array_mails_sent_tf, array_mails_received_tf = getIndividualInfoInner(df_enron_tf, int(request.POST['person_id']))
 
     #Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received
     return JsonResponse({
@@ -154,20 +152,24 @@ def individualInfo(request):
             'min_sentiment_sent': str(min_sentiment_send),
             'mean_sentiment_sent': str(mean_sentiment_send),
             'max_sentiment_sent': str(max_sentiment_send),
+            'array_mails_sent': array_mails_sent,
             'mails_received': str(mails_received),
             'min_sentiment_received': str(min_sentiment_received),
             'mean_sentiment_received': str(mean_sentiment_received),
-            'max_sentiment_received': str(max_sentiment_received)
+            'max_sentiment_received': str(max_sentiment_received),
+            'array_mails_received': array_mails_received,
         },
         'time_filtered': {
             'mails_sent': str(mails_send_tf),
             'min_sentiment_sent': str(min_sentiment_send_tf),
             'mean_sentiment_sent': str(mean_sentiment_send_tf),
             'max_sentiment_sent': str(max_sentiment_send_tf),
+            'array_mails_sent': array_mails_sent_tf,
             'mails_received': str(mails_received_tf),
             'min_sentiment_received': str(min_sentiment_received_tf),
             'mean_sentiment_received': str(mean_sentiment_received_tf),
-            'max_sentiment_received': str(max_sentiment_received_tf)
+            'max_sentiment_received': str(max_sentiment_received_tf),
+            'array_mails_received': array_mails_received_tf,
         }
     })
 
@@ -179,14 +181,29 @@ def getIndividualInfoInner(df_enron, person_id):
     df_2 = df_1[['fromEmail']]
     df_3 = df_2.describe()
     ID_mail = df_3['fromEmail']['top']
-    df_describe_person = df_enron[person_send][['fromJobtitle']].describe()
+    df_describe_person = df_1[['fromJobtitle']].describe()
     job_title = df_describe_person['fromJobtitle']['top']
-    mails_send = df_enron[person_send]['sentiment'].count()
-    mean_sentiment_send = df_enron[person_send]['sentiment'].mean()
-    min_sentiment_send = df_enron[person_send]['sentiment'].min()
-    max_sentiment_send = df_enron[person_send]['sentiment'].max()
-    mails_received = df_enron[person_received]['sentiment'].count()
-    mean_sentiment_received = df_enron[person_received]['sentiment'].mean()
-    min_sentiment_received = df_enron[person_received]['sentiment'].min()
-    max_sentiment_received = df_enron[person_received]['sentiment'].max()
-    return Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received
+    mails_send = df_1['sentiment'].count()
+    mean_sentiment_send = df_1['sentiment'].mean()
+    min_sentiment_send = df_1['sentiment'].min()
+    max_sentiment_send = df_1['sentiment'].max()
+    df_received = df_enron[person_received]
+    mails_received = df_received['sentiment'].count()
+    mean_sentiment_received = df_received['sentiment'].mean()
+    min_sentiment_received = df_received['sentiment'].min()
+    max_sentiment_received = df_received['sentiment'].max()
+    emails_sent = 'none'
+    try:
+        df_emails_sent_1 = df_1.groupby('toId').describe()
+        df_emails_sent_2 = df_emails_sent_1['fromId']
+        emails_sent = df_emails_sent_2[['count']].to_json()
+    except:
+        pass
+    emails_received = 'none'
+    try:
+        emails_received_1 = df_received.groupby('fromId').describe()
+        emails_received_2 = emails_received_1['toId']
+        emails_received = df_emails_sent_2[['count']].to_json()
+    except:
+        pass
+    return Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, emails_sent, emails_received

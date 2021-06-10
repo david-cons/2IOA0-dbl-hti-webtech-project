@@ -11,6 +11,7 @@ const prepareGraphCall = () => {
 
 const initialGraphCall = () => {
   prepareGraphCall()
+  initialOverlay.classList.add('hidden')
 
   let formData = new FormData()
   formData.append('graph_size', calculateGraphSize())
@@ -64,7 +65,6 @@ const handleInitialGraphCall = event => {
 
   response = JSON.parse(event.target.response)
 
-  initialOverlay.classList.add('hidden')
   Bokeh.embed.embed_item(JSON.parse(response.graph), rootId)
     .then(resizePlot)
   
