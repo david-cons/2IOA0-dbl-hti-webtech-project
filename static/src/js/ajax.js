@@ -6,6 +6,7 @@ const individual = document.querySelector('#individualInfo')
 const individual_loading = document.querySelector('#individual_loading')
 // const left = document.querySelector('.mainRow > .left')
 const right = document.querySelector('.mainRow > .right')
+const initialOverlay = document.querySelector('#initialOverlay')
 
 const makeFormDataFromCsvInput = (formData) => {
   const files = document.querySelector('#inputForm [name=csv_data]').files;
@@ -13,6 +14,46 @@ const makeFormDataFromCsvInput = (formData) => {
     throw 'Please upload a csv file'
   }
   formData.append('csv_data', files[0])
+}
+
+const initialGraphCall = () => {
+  errorP.classList.add('hidden')
+  root.innerHTML = ''
+  root.classList.remove('hidden')
+  graph_loading.classList.remove('hidden')
+
+  let formData = new FormData()
+  formData.append('graph_size', calculateGraphSize())
+
+  try {
+    makeFormDataFromCsvInput(formData)
+  } catch (e) {
+    showFormError(e)
+    graph_loading.classList.add('hidden')
+    return
+  }
+
+  const xhttp = new XMLHttpRequest();
+
+  xhttp.addEventListener('load', function (event) {
+    graph_loading.classList.add('hidden')
+
+    if (event.target.status !== 200) {
+      showFormError(event.target.statusText)
+      return
+    }
+
+    response = JSON.parse(event.target.response)
+
+    initialOverlay.classList.add('hidden')
+    Bokeh.embed.embed_item(JSON.parse(response.graph), roodId)
+      .then(resizePlot)
+    
+    initTimeSlider(response.parameters.timeSlider)
+  })
+
+  xhttp.open("POST", "/initial-full-size-graph", true);
+  xhttp.send(formData);
 }
 
 const getFullSizeGraph = () => {
@@ -45,6 +86,7 @@ const getFullSizeGraph = () => {
       return
     }
 
+    initialOverlay.classList.add('hidden')
     Bokeh.embed.embed_item(JSON.parse(JSON.parse(event.target.response)), roodId)
       .then(resizePlot)
   })
@@ -120,3 +162,32 @@ function fillIndividualInfo(data) {
   }
   individual.innerHTML = html
 }
+
+// function getParamsFromCsv(text) {
+//   var lines = text.split('\n');
+//   let params = {
+//     start_date: {
+//       value: '5000-00-00',
+//       function: function(val){val < this.value && (this.value = val)},
+//       index: lines[0].indexOf('date'),
+//     },
+//     end_date: {
+//       value: '0000-00-00',
+//       function: function(val){val > this.value && (this.value = val)},
+//       index: lines[0].indexOf('date')
+//     }
+//   }
+//   const paramKeys = Object.keys(params)
+//   for (var j = 1 /*skip line 1 */; j < lines.length; j++) {
+//     if (lines[j] != "") {
+//       var information = lines[j].split(',');
+//       for (let k = 0; k < paramKeys.length; k++) {
+//         let key = paramKeys[k]
+//         let param = params[key]
+//         let newVal = information[param.index]
+//         param.function(newVal)
+//       }
+//     }
+//   }
+//   return params
+// }

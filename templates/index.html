@@ -21,28 +21,33 @@
 </head>
 
 <body>
-  <h1>Welcome to Webtech #13</h1>
-  <section class="small">
-    <form id="inputForm" enctype="multipart/form-data">
+  <div id="initialOverlay">
+    <div id="inputForm">
+      <h1>Welcome to Webtech #13</h1>
       <p>Please upload a csv file</p>
       <input type="file" name="csv_data" accept=".csv">
-      <p>Opionally select a time span</p>
-      <div class="doubleSlider">
-        <div class="handWrap">
-          <div class="highlight"></div>
-          <div class="leftHand hand"></div>
-          <div class="rightHand hand"></div>
-        </div>
-        <div class="inputWrap">
-          <input type="text" class="minValue" readonly>
-          <button class="allTimeButton">All Time</button>
-          <input type="text" class="maxValue" readonly>
-        </div>
+      <br>
+      <button onclick="initialGraphCall()">Proceed with this dataset</button>
+      <p class="error hidden"></p>
+      <p class="info">You can refresh the page at any time to upload a new dataset.</p>
+    </div>
+  </div>
+  <section class="small">
+    <p>Filter by time span</p>
+    <div class="doubleSlider">
+      <div class="handWrap">
+        <div class="highlight"></div>
+        <div class="leftHand hand"></div>
+        <div class="rightHand hand"></div>
       </div>
-    </form>
+      <div class="inputWrap">
+        <input type="text" class="minValue" readonly>
+        <button class="allTimeButton">All Time</button>
+        <input type="text" class="maxValue" readonly>
+      </div>
+    </div>
     <button onclick="getFullSizeGraph()">Show Graph</button>
     <!-- <button onclick="getChordDiagram()">Show Chord Diagram</button> -->
-    <p class="error hidden"></p>
     <p id="sizeP" class="hidden">Your file was <strong id="sizeSpan"></strong> bytes!</p>
   </section>
   <div class="mainRow">

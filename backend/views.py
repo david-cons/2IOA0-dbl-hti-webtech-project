@@ -6,30 +6,19 @@ import django.http
 import json
 
 def filterDataByTime(request, data):
-    startDate = "empty"
-    endDate = "empty"
-    #form = timeForm(request.POST or None)
-    #if form.is_valid():
-    startDate = request.POST["start_date"]
-    endDate = request.POST["end_date"]
-    print(startDate) 
-    print(endDate)
+    startDate = request.POST.get("start_date", '0000-00-00')
+    endDate = request.POST.get("end_date", '9999-99-99')
 
     return data[ ((data["date"]>=startDate) & (data["date"] <= endDate)) ]
-        
-
-
 
 def index(request):
     return render(request, 'index.html')
 
-def fullSizeGraph(request):
+def makeGraph(request, df_enron):
     import pandas as pd
     import networkx
     import matplotlib.pyplot as plt
     import numpy as np
-
-    df_enron = filterDataByTime(request,pd.read_csv(request.FILES['csv_data']))
 
     #from bokeh.io import output_notebook, show, save
     from bokeh.models import Range1d, Circle, ColumnDataSource, MultiLine
@@ -70,7 +59,7 @@ def fullSizeGraph(request):
             ("Jobtitle","@job"),
     ]
 
-    graph_size = int(request.POST['graph_size'])
+    graph_size = int(request.POST.get('graph_size', '720'))
     plot = figure(tooltips = TOOLTIPS,
                 tools="pan,zoom_in,wheel_zoom,save,reset,box_select,undo", active_scroll='wheel_zoom',
                 x_range=Range1d(-20,20), y_range=Range1d(-20,20),  title='Enron Emails',
@@ -88,7 +77,27 @@ def fullSizeGraph(request):
 
     item_text = json.dumps(json_item(plot))
 
-    return django.http.JsonResponse(item_text, safe=False)
+    return item_text
+
+def fullSizeGraph(request):
+    import pandas as pd
+    graph_json = makeGraph(request, filterDataByTime(request,pd.read_csv(request.FILES['csv_data'])))
+    return django.http.JsonResponse(graph_json, safe=False)
+
+def initialFullSizeGraph(request):
+    import pandas as pd
+    graph_json = makeGraph(request, pd.read_csv(request.FILES['csv_data']))
+    return JsonResponse({
+        'graph': graph_json,
+        'parameters': {
+            'timeSlider': {
+                'startYear': 1998,
+                'startMonth': 6,
+                'endYear': 2001,
+                'endMonth': 1
+            }
+        }
+    })
 
 def chordDiagram(request):
     import numpy as np

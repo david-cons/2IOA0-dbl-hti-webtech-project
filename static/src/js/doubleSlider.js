@@ -9,9 +9,13 @@ const maxValue = slider.querySelector('.maxValue')
 
 let currentHand = null
 
-let dateRange = generateDateRange(1998, 11, 2002, 06) // startYear, startMonth, endYear, endMonth
+let dateRange
 
-resetInputs()
+const initTimeSlider = (dateRangeInit) => {
+  dateRange = generateDateRange(dateRangeInit)
+  document.addEventListener('mousemove', handleMouseMove)
+  resetInputs()
+}
 
 for (let i = 0; i < hands.length; i++) {
   hands[i].addEventListener('mousedown', function (e) {
@@ -21,7 +25,6 @@ for (let i = 0; i < hands.length; i++) {
 document.addEventListener('mouseup', function (e) {
   currentHand = null
 })
-document.addEventListener('mousemove', handleMouseMove)
 
 function handleMouseMove(e) {
   if (currentHand) {
@@ -56,9 +59,11 @@ function handleMouseMove(e) {
   }
 }
 
-function generateDateRange(startYear, startMonth, endYear, endMonth) {
+function generateDateRange(timeData) {
   let dates = []
-  for (let year = startYear, month = startMonth; year < endYear || (year === endYear && month <= endMonth); month++) {
+  for (let year = timeData.startYear, month = timeData.startMonth;
+      year < timeData.endYear || (year === timeData.endYear && month <= timeData.endMonth);
+      month++) {
     dates.push({
       value: year + '-' + month,
       humanValue: months[month -1] + ' ' + year

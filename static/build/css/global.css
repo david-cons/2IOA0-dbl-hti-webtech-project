@@ -3,6 +3,23 @@ body {
   background-color: #19103d;
   color: #fff; }
 
+#initialOverlay {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: inherit;
+  z-index: 100; }
+  #initialOverlay #inputForm {
+    padding-bottom: 20vh; }
+
+.info {
+  opacity: 0.6; }
+
 h1 {
   text-align: center; }
 
