@@ -11,7 +11,6 @@ const prepareGraphCall = () => {
 
 const initialGraphCall = () => {
   prepareGraphCall()
-  initialOverlay.classList.add('hidden')
 
   let formData = new FormData()
   formData.append('graph_size', calculateGraphSize())
@@ -28,6 +27,7 @@ const initialGraphCall = () => {
   xhttp.addEventListener('load', handleInitialGraphCall)
   xhttp.open("POST", "/initial-full-size-graph", true);
   xhttp.send(formData);
+  initialOverlay.classList.add('hidden')
 }
 
 const getFullSizeGraph = () => {
