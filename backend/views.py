@@ -203,7 +203,7 @@ def getIndividualInfoInner(df_enron, person_id):
     try:
         emails_received_1 = df_received.groupby('fromId').describe()
         emails_received_2 = emails_received_1['toId']
-        emails_received = df_emails_sent_2[['count']].to_json()
+        emails_received = emails_received_2[['count']].to_json()
     except:
         pass
     return Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, emails_sent, emails_received
