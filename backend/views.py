@@ -92,9 +92,9 @@ def initialFullSizeGraph(request):
         'parameters': {
             'timeSlider': {
                 'startYear': 1998,
-                'startMonth': 6,
-                'endYear': 2001,
-                'endMonth': 1
+                'startMonth': 11,
+                'endYear': 2002,
+                'endMonth': 6
             }
         }
     })
