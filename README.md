@@ -17,4 +17,4 @@ year 1 dbl project
 1. Install node: https://nodejs.org/en/download/
 2. Go to static: `cd static`
 3. Install node packages: `npm install`
-4. After making changes to .scss files build the assest: `npm run build`
+4. After making changes to .scss files build the assest: `npm run watch`

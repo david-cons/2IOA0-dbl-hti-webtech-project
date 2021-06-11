@@ -34,19 +34,23 @@ h1 {
 
 input, button {
   background-color: #fff;
-  border: 1px solid #fff;
+  border: none;
   color: rgb(25, 16, 61);
   cursor: pointer;
 }
 
+input[type="file"] {
+  margin-bottom: 0.5rem;
+}
+
 button {
-  margin-top: 0.5rem;
   font-weight: 600;
   padding: 0.25rem 1rem;
   transition: transform 150ms ease-in-out;
   &:hover,
   &:focus {
     transform: scale(0.95);
+    background-color: #afa;
   }
 }
 
@@ -86,10 +90,16 @@ section.small {
       user-select: none;
       &.leftHand {
         border-left: 1rem solid #fff;
+        &:hover {
+          border-left-color: #afa;
+        }
         left: -1rem;
       }
       &.rightHand {
         border-right: 1rem solid #fff;
+        &:hover {
+          border-right-color: #afa;
+        }
         right: -1rem;
       }
     }
