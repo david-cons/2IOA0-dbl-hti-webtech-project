@@ -1,12 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import HttpResponse
-
 from .forms import timeForm
 import django.http
 import json
-import pandas as pd
-
 
 def filterDataByTime(request, data):
     startDate = request.POST.get("start_date", '0000-00-00')
@@ -18,7 +15,7 @@ def index(request):
     return render(request, 'index.html')
 
 def makeGraph(request, df_enron):
-    #import pandas as pd
+    import pandas as pd
     import networkx
     import matplotlib.pyplot as plt
     import numpy as np
@@ -83,39 +80,28 @@ def makeGraph(request, df_enron):
     return item_text
 
 def fullSizeGraph(request):
-    #import pandas as pd
+    import pandas as pd
     graph_json = makeGraph(request, filterDataByTime(request,pd.read_csv(request.FILES['csv_data'])))
     return django.http.JsonResponse(graph_json, safe=False)
 
 def initialFullSizeGraph(request):
-    #import pandas as pd
-    df_dataset = pd.read_csv(request.FILES['csv_data'])
-    graph_json = makeGraph(request, df_dataset)
-    
-    startDate = df_dataset["date"].min()
-    endDate = df_dataset["date"].max()
-
-    startYear = startDate[:4]
-    endYear = endDate[:4]
-
-    startMonth = startDate[5:7]
-    endMonth = startDate[5:7]
-
+    import pandas as pd
+    graph_json = makeGraph(request, pd.read_csv(request.FILES['csv_data']))
     return JsonResponse({
         'graph': graph_json,
         'parameters': {
             'timeSlider': {
-                'startYear': startYear,
-                'startMonth': startMonth,
-                'endYear': endYear,
-                'endMonth': endMonth
+                'startYear': 1998,
+                'startMonth': 11,
+                'endYear': 2002,
+                'endMonth': 6
             }
         }
     })
 
 def chordDiagram(request):
     import numpy as np
-    #import pandas as pd
+    import pandas as pd
     from chord import Chord
 
     df_enron = filterDataByTime(request ,pd.read_csv(request.FILES['csv_data']))
@@ -133,7 +119,7 @@ def chordDiagram(request):
     return HttpResponse(Chord(matrix, names, wrap_labels=False).to_html())
 
 def individualInfo(request):
-    #import pandas as pd
+    import pandas as pd
 
     import matplotlib.pyplot as plt
 

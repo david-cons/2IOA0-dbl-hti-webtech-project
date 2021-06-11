@@ -89,26 +89,20 @@ def fullSizeGraph(request):
 
 def initialFullSizeGraph(request):
     #import pandas as pd
-    df_dataset = pd.read_csv(request.FILES['csv_data'])
+    df_dataset = pd.read_csv(request.FILES['csv_data']
     graph_json = makeGraph(request, df_dataset)
     
-    startDate = df_dataset["date"].min()
-    endDate = df_dataset["date"].max()
-
-    startYear = startDate[:4]
-    endYear = endDate[:4]
-
-    startMonth = startDate[5:7]
-    endMonth = startDate[5:7]
+    startYear = df_dataset["date"].min()
+    endYear = df_dataset["date"].max()
 
     return JsonResponse({
         'graph': graph_json,
         'parameters': {
             'timeSlider': {
-                'startYear': startYear,
-                'startMonth': startMonth,
-                'endYear': endYear,
-                'endMonth': endMonth
+                'startYear': 1998,
+                'startMonth': 11,
+                'endYear': 2002,
+                'endMonth': 6
             }
         }
     })

@@ -89,7 +89,7 @@ def fullSizeGraph(request):
 
 def initialFullSizeGraph(request):
     #import pandas as pd
-    df_dataset = pd.read_csv(request.FILES['csv_data'])
+    df_dataset = pd.read_csv(request.FILES['csv_data']
     graph_json = makeGraph(request, df_dataset)
     
     startDate = df_dataset["date"].min()
