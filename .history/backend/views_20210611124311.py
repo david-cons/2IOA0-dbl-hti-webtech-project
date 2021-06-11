@@ -15,9 +15,9 @@ def filterDataByTime(request, data):
     return data[ ((data["date"]>=startDate) & (data["date"] <= endDate)) ]
 
 def filter(request,data): #full filtering
-    return request,filterDataByTime(request, data) # compound with more filtering options
+    return filterDataByTime(request, data) # compound with more filtering options
 
-
+    
 def index(request):
     return render(request, 'index.html')
 
