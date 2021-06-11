@@ -211,7 +211,16 @@ table {
     }
   }
   &:hover {
-    box-shadow: 0 -2px 0 0 #afa;
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #afa;
+    }
     p {
       display: block;
     }

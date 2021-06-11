@@ -173,10 +173,17 @@ table {
       border-right-color: white;
       box-sizing: border-box;
       pointer-events: none; }
-  .email_array > *:hover {
-    box-shadow: 0 -2px 0 0 #afa; }
-    .email_array > *:hover p {
-      display: block; }
+  .email_array > *:hover::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #afa; }
+  .email_array > *:hover p {
+    display: block; }
 
 .email_array.borders div {
   box-shadow: -1px 0 0 0 #19103d; }
