@@ -166,13 +166,17 @@ table {
       position: absolute;
       right: 0;
       bottom: 100%;
-      width: 1rem;
-      height: 1rem;
-      border: 0.5rem solid transparent;
+      width: 0.5rem;
+      height: 0.5rem;
+      border: 0.25rem solid transparent;
       border-bottom-color: white;
-      box-sizing: border-box; }
-  .email_array > *:hover p {
-    display: block; }
+      border-right-color: white;
+      box-sizing: border-box;
+      pointer-events: none; }
+  .email_array > *:hover {
+    box-shadow: 0 -2px 0 0 #afa; }
+    .email_array > *:hover p {
+      display: block; }
 
 .email_array.borders div {
   box-shadow: -1px 0 0 0 #19103d; }
