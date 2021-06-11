@@ -95,11 +95,11 @@ def initialFullSizeGraph(request):
     startDate = df_dataset["date"].min()
     endDate = df_dataset["date"].max()
 
-    startYear = startDate[:4]
-    endYear = endDate[:4]
+    startYear = int(startDate[:4])
+    endYear = int(endDate[:4])
 
-    startMonth = startDate[5:7]
-    endMonth = startDate[5:7]
+    startMonth = int(startDate[5:7])
+    endMonth = int(startDate[5:7])
 
     return JsonResponse({
         'graph': graph_json,
