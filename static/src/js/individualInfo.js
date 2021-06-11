@@ -5,12 +5,17 @@ const meta =   document.querySelector('#meta')
 
 // root is the root of the full size graph
 root.addEventListener('mouseup', e => {
+  const idElement = document.querySelector('.bk-tooltip .bk .bk .bk-tooltip-row-value span')
+  if (idElement.offsetWidth === 0) {
+    right.classList.add('hidden')
+    return
+  }
   right.classList.remove('hidden')
   individual_loading.classList.remove('hidden')
   individual.classList.add('hidden')
   meta.classList.add('hidden')
   const formData = new FormData()
-  formData.append('person_id', document.querySelector('.bk-tooltip .bk .bk .bk-tooltip-row-value span').innerHTML)
+  formData.append('person_id', idElement.innerHTML)
   formData.append('start_date', document.querySelector('.minValue').getAttribute('data-date'))
   formData.append('end_date', document.querySelector('.maxValue').getAttribute('data-date'))
   makeFormDataFromCsvInput(formData)
