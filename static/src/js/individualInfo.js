@@ -3,11 +3,22 @@ const individual_loading = document.querySelector('#individual_loading')
 const right = document.querySelector('.mainRow > .right')
 const meta =   document.querySelector('#meta')
 
+let justAClick = false;
+
 // root is the root of the full size graph
+root.addEventListener('mousedown', e => {
+  justAClick = true
+})
+root.addEventListener('mousemove', e => {
+  justAClick = false
+})
 root.addEventListener('mouseup', e => {
   const idElement = document.querySelector('.bk-tooltip .bk .bk .bk-tooltip-row-value span')
   if (idElement.offsetWidth === 0) {
-    right.classList.add('hidden')
+    if (justAClick) {
+      right.classList.add('hidden')
+    }
+    justAClick = false
     return
   }
   right.classList.remove('hidden')

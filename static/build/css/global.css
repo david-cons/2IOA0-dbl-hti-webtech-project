@@ -190,3 +190,6 @@ table {
 
 tr.paddingBottom td {
   padding-bottom: 1rem; }
+
+tr:hover {
+  color: #afa; }
