@@ -28,17 +28,20 @@ h1 {
 
 input, button {
   background-color: #fff;
-  border: 1px solid #fff;
+  border: none;
   color: #19103d;
   cursor: pointer; }
 
+input[type="file"] {
+  margin-bottom: 0.5rem; }
+
 button {
-  margin-top: 0.5rem;
   font-weight: 600;
   padding: 0.25rem 1rem;
   transition: transform 150ms ease-in-out; }
   button:hover, button:focus {
-    transform: scale(0.95); }
+    transform: scale(0.95);
+    background-color: #afa; }
 
 .hidden {
   display: none !important; }
@@ -73,9 +76,13 @@ section.small {
       .doubleSlider .handWrap .hand.leftHand {
         border-left: 1rem solid #fff;
         left: -1rem; }
+        .doubleSlider .handWrap .hand.leftHand:hover {
+          border-left-color: #afa; }
       .doubleSlider .handWrap .hand.rightHand {
         border-right: 1rem solid #fff;
         right: -1rem; }
+        .doubleSlider .handWrap .hand.rightHand:hover {
+          border-right-color: #afa; }
     .doubleSlider .handWrap .highlight {
       position: absolute;
       background-color: #fff;
