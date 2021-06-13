@@ -11,17 +11,16 @@ import pandas as pd
 def filterDataByTime(request, data):
     startDate = request.POST.get("start_date", '0000-00-00')
     endDate = request.POST.get("end_date", '9999-99-99')
-
     return data[ ((data["date"]>=startDate) & (data["date"] <= endDate)) ]
 
-#def filterDataByJobtitle(request, data):
-    
-    #return data[ data['fromJobtitle'] in request.post.get()]
-
-
+def filterDataByJobtitle(request, data):
+    activeJobtitles = ['CEO', 'Director', 'Vice President', 'Trader', 'Employee']
+    return data[ data['fromJobtitle'] in activeJobtitles]
 
 def filter(request,data): #full filtering
-    return filterDataByTime(request, data) # compound with more filtering options
+    finalData = filterDataByTime(request, data)
+    return filterDataByJobtitles(request, finalData) # compound with more filtering options
+
 
 
 def index(request):
