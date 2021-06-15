@@ -15,11 +15,7 @@ def filterDataByTime(request, data):
     return data[ ((data["date"]>=startDate) & (data["date"] <= endDate)) ]
 
 def filterDataByJobtitle(request, data):
-    activeJobTitles = []
-    
-    for i in request.POST.get("activeJobTitles").split():
-        activeJobTitles.append(i)
-
+    activeJobtitles = ['CEO', 'Director', 'Vice President', 'Trader', 'Employee']
     return data[ data['fromJobtitle'] in activeJobtitles]
 
 def filterDataBySentiment(request,data):
@@ -34,21 +30,10 @@ def filterDataByEmailAddress(request,data):
     email = request.POST.get("email")
     return data[ ( (data["fromEmail"] == email) | (data["toEmail"] == email) ) ]
 
-"""
-def filter(request,data): #full filtering
-    data = filterDataByTime(request, data)
-    data = filterDataByJobtitle(request, data)
-    data = filterDataBySentiment(request, data)
-    data = filterDataByEmailAddress(request, data)
-    # compound with more filtering options
-    
-    return data 
-"""
 
 def filter(request,data): #full filtering
     finalData = filterDataByTime(request, data)
-    #return filterDataByJobtitles(request, finalData) 
-    return finalData
+    return filterDataByJobtitles(request, finalData) # compound with more filtering options
 
 ################################################################
 
