@@ -1,36 +1,10 @@
-
-########Backend Utility Libs#####
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import HttpResponse
 
 import django.http
 import json
-################################
-
-########Data Science and Graph libs######
 import pandas as pd
-import networkx
-import matplotlib.pyplot as plt
-import numpy as np
-
-
-########Normal Graph############
-from bokeh.models import Range1d, Circle, ColumnDataSource, MultiLine
-from bokeh.plotting import figure
-from bokeh.models.graphs import from_networkx
-from bokeh.palettes import Category10
-from bokeh.transform import linear_cmap
-from bokeh.embed import json_item
-
-
-############Chord################
-import numpy as np
-    
-from chord import Chord
-########################################
-
-
 
 
 ############Filtering###############
@@ -82,6 +56,17 @@ def index(request):
 
 def makeGraph(request, df_enron):
     
+    import networkx
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    #from bokeh.io import output_notebook, show, save
+    from bokeh.models import Range1d, Circle, ColumnDataSource, MultiLine
+    from bokeh.plotting import figure
+    from bokeh.models.graphs import from_networkx
+    from bokeh.palettes import Category10
+    from bokeh.transform import linear_cmap
+    from bokeh.embed import json_item
 
     #output_notebook() #remove this when not using notebook
 
@@ -166,6 +151,9 @@ def initialFullSizeGraph(request):
     })
 
 def chordDiagram(request):
+    import numpy as np
+    
+    from chord import Chord
 
     df_enron = filterDataByTime(request ,pd.read_csv(request.FILES['csv_data']))
     names = ['Managing Director', 'In House Lawyer', 'Vice President', 'Employee', 'Unknown', 'Manager', 'Director', 'Trader', 'CEO', 'President']
@@ -269,4 +257,3 @@ def getIndividualInfoInner(df_enron, person_id):
     except:
         pass
     return Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, emails_sent, emails_received
-    #from bokeh.io import output_notebook, show, save
