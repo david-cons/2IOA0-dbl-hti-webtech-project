@@ -297,7 +297,7 @@ def chordDiagram(person_id, df_enron):
         opts.Chord(cmap='Category20', edge_cmap='Category20', edge_color='sentiment', 
                 labels='name', node_color='group', edge_alpha=0.8, edge_line_width=1.5))
 
-    final_chord = chord#.select(index=person_id)
+    final_chord = chord.select(index=person_id)
 
     plot = hv.render(final_chord, backend='bokeh')
     item_text = json.dumps(json_item(plot))
@@ -330,7 +330,7 @@ def individualInfo(request):
     df_enron_tf = filter(request,df_enron)
     Person_ID_1_tf, ID_mail_tf, job_title_tf, mails_send_tf, mean_sentiment_send_tf, min_sentiment_send_tf, max_sentiment_send_tf, mails_received_tf, mean_sentiment_received_tf, min_sentiment_received_tf, max_sentiment_received_tf, array_mails_sent_tf, array_mails_received_tf = getIndividualInfoInner(df_enron_tf, person_id)
 
-    chord = chordDiagram(person_id, df_enron_tf)
+    chord = chordDiagram(person_id, df_enron)
 
     #Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received
     return JsonResponse({
