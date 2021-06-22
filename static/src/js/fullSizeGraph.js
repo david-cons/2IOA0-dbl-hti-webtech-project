@@ -35,12 +35,7 @@ const getFullSizeGraph = () => {
 
   let formData = new FormData()
 
-  const jobTitles = getSelectedJobTitles()
-  if (jobTitles) {
-    formData.append('job_titles', jobTitles)
-  }
-  formData.append('start_date', document.querySelector('.minValue').getAttribute('data-date'))
-  formData.append('end_date', document.querySelector('.maxValue').getAttribute('data-date'))
+  makeGeneralFilters(formData)
   formData.append('graph_size', calculateGraphSize())
 
   try {
@@ -85,7 +80,7 @@ const handleGraphCall = event => {
   }
 
   initialOverlay.classList.add('hidden')
-  
+
   response = JSON.parse(event.target.response)
   showMainGraph(response.graph)
   resizePlot()
@@ -108,3 +103,16 @@ const calculateGraphSize = () => {
 }
 
 window.addEventListener('resize', () => { window.setTimeout(resizePlot, 1) })
+
+const makeGeneralFilters = formData => {
+  const jobTitles = getSelectedJobTitles()
+  if (jobTitles) {
+    formData.append('job_titles', jobTitles)
+  }
+  const sentiment = getSentimentValue()
+  for (let i = 0; i < sentiment.length; i++) {
+    formData.append('sentiment_'+sentiment[i], sentiment[i])
+  }
+  formData.append('start_date', document.querySelector('.minValue').getAttribute('data-date'))
+  formData.append('end_date', document.querySelector('.maxValue').getAttribute('data-date'))
+}

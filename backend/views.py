@@ -49,8 +49,22 @@ def filterDataByJobtitle(request, data):
     return data[ data['fromJobtitle'].item() in activeJobTitles]
 
 def filterDataBySentiment(request,data):
-    sentimentValue = True if (request.POST.get("sentiment") == "positive") else False
-    return data[(data["sentiment"]>= 0)] if sentimentValue else data[(data["sentiment"] <= 0)]
+    mask = data["sentiment"] == 10
+    filterSelected = False
+    if 'sentiment_negative' in request.POST:
+        mask |= (data["sentiment"] <= -0.1)
+        filterSelected = True
+    if 'sentiment_neutral' in request.POST:
+        mask |= ((data["sentiment"] >= -0.1) & (data["sentiment"] <= 0.1))
+        filterSelected = True
+    if 'sentiment_positive' in request.POST:
+        mask |= (data["sentiment"] >= 0.1)
+        filterSelected = True
+    if (filterSelected):
+        print(len(data))
+        print(len(data[mask]))
+        return data[mask]
+    return data
 
 def filterDataByPerson(request,data): #used for other purposes not necessarily in filtering
     personID = request.POST.get("personID")
@@ -74,6 +88,7 @@ def filter(request,data): #full filtering
 def filter(request,data): #full filtering
     finalData = filterDataByTime(request, data)
     finalData = filterDataByJobtitle(request, finalData)
+    finalData = filterDataBySentiment(request, finalData)
     #return filterDataByJobtitles(request, finalData) 
     return finalData
 
@@ -87,13 +102,15 @@ def makeGraph(request, df_enron):
 
     di = {'CEO':1,'Director':2,'Employee':3,'In House Lawyer':4,'Manager':5,'Managing Director':6,'President':7,'Trader':8,'Unknown':9,'Vice President':10}
     df_rejob = df_enron.replace({"fromJobtitle": di})
-    df_attributes = df_enron[['fromId', 'fromJobtitle']].drop_duplicates()
-    df_attributes.columns = ['fromId', 'job']
-    df_attributesx = df_rejob[['fromId', 'fromJobtitle']].drop_duplicates()
+    df_attributes = df_enron[['fromId', 'fromJobtitle', 'fromEmail']].drop_duplicates()
+    df_attributes.columns = ['fromId', 'job', 'fromEmail']
+    df_attributesx = df_rejob[['fromId', 'fromJobtitle', 'fromEmail']].drop_duplicates()
     job = df_attributes.set_index('fromId').to_dict('i')
     jobx = df_attributesx.set_index('fromId').to_dict('i')
+    fromEmail = df_attributes.set_index('fromEmail').to_dict('i')
     networkx.set_node_attributes(G, job)
     networkx.set_node_attributes(G, jobx)
+    networkx.set_node_attributes(G, fromEmail)
     #jobs = ['Employee','Vice President','Unknown','Manager','CEO','Trader','Director','President','Managing Director','In House Lawyer']
 
     degrees = dict(networkx.degree(G))
@@ -108,6 +125,7 @@ def makeGraph(request, df_enron):
 
     TOOLTIPS = [
         ("Person ID", "@index"),
+        ("Email", "@fromEmail"),
             ("people communicated with", "@degree"),
             ("Jobtitle","@job"),
     ]
@@ -279,7 +297,7 @@ def chordDiagram(person_id, df_enron):
         opts.Chord(cmap='Category20', edge_cmap='Category20', edge_color='sentiment', 
                 labels='name', node_color='group', edge_alpha=0.8, edge_line_width=1.5))
 
-    final_chord = chord.select(index=person_id)
+    final_chord = chord#.select(index=person_id)
 
     plot = hv.render(final_chord, backend='bokeh')
     item_text = json.dumps(json_item(plot))
@@ -309,10 +327,10 @@ def individualInfo(request):
     df_enron = pd.read_csv(request.FILES['csv_data'])
     Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, array_mails_sent, array_mails_received = getIndividualInfoInner(df_enron, person_id)
     
-    df_enron_tf = filterDataByTime(request,df_enron)
+    df_enron_tf = filter(request,df_enron)
     Person_ID_1_tf, ID_mail_tf, job_title_tf, mails_send_tf, mean_sentiment_send_tf, min_sentiment_send_tf, max_sentiment_send_tf, mails_received_tf, mean_sentiment_received_tf, min_sentiment_received_tf, max_sentiment_received_tf, array_mails_sent_tf, array_mails_received_tf = getIndividualInfoInner(df_enron_tf, person_id)
 
-    chord = chordDiagram(person_id, df_enron)
+    chord = chordDiagram(person_id, df_enron_tf)
 
     #Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received
     return JsonResponse({

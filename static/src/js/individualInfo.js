@@ -29,8 +29,7 @@ root.addEventListener('mouseup', e => {
   chordFrame.classList.add('hidden')
   const formData = new FormData()
   formData.append('person_id', idElement.innerHTML)
-  formData.append('start_date', document.querySelector('.minValue').getAttribute('data-date'))
-  formData.append('end_date', document.querySelector('.maxValue').getAttribute('data-date'))
+  makeGeneralFilters(formData)
   makeFormDataFromCsvInput(formData)
   const xhttp = new XMLHttpRequest();
   xhttp.addEventListener('load', event => {
@@ -51,11 +50,12 @@ root.addEventListener('mouseup', e => {
 })
 
 const fillIndividualInfo = data => {
-  document.querySelector('#meta .id').innerHTML = '#'+data.meta.person_id
-  document.querySelector('#meta .email').innerHTML = data.meta.mail_address
+  document.querySelector('#meta .id').innerHTML = '#' + data.meta.person_id
+  const email = data.meta.mail_address
+  document.querySelector('#meta .email').innerHTML = email.substring(0, email.indexOf('@'))
   document.querySelector('#meta .job_title').innerHTML = data.meta.job_title
   const keys = Object.keys(data.all_time)
-  let html = '<tr class="text-right"><td colspan="2"><strong>selected time</strong></td><td>all time<td></tr>'
+  let html = '<tr class="text-right"><td colspan="2"><strong>filtered data</strong></td><td>all data<td></tr>'
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
     html += '<tr>'

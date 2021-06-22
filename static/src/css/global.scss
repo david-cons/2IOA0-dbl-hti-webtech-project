@@ -43,6 +43,10 @@ input[type="file"] {
   margin-bottom: 0.5rem;
 }
 
+.mb-0 {
+  margin-bottom: 0;
+}
+
 button {
   font-weight: 600;
   padding: 0.25rem 1rem;
@@ -248,17 +252,17 @@ tr:hover {
   color: #afa;
 }
 
-.jobTitleWrap {
+.checkboxes {
   display: flex;
   flex-wrap: wrap;
 }
 
-.jobTitleWrap * {
+.checkboxes * {
   margin: 0;
   padding: 0;
   display: inline;
 }
-.jobTitleWrap p {
+.checkboxes p {
   margin: 0 1em 0 0.5em;
 }
 

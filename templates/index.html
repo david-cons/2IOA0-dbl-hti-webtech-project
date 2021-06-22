@@ -16,6 +16,7 @@
   <script defer src="{% static 'src/js/chordDiagram.js'%}"></script>
   <script defer src="{% static 'src/js/individualInfo.js'%}"></script>
   <script defer src="{% static 'src/js/jobTitleFilter.js'%}"></script>
+  <script defer src="{% static 'src/js/sentimentFilter.js'%}"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.2.min.js"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.3.2.min.js"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.3.2.min.js"></script>
@@ -37,7 +38,7 @@
     </div>
   </div>
   <section class="small">
-    <p>Filter by time span</p>
+    <p class="mb-0">Filter by time span</p>
     <div class="doubleSlider">
       <div class="handWrap">
         <div class="highlight"></div>
@@ -49,8 +50,23 @@
         <button class="allTimeButton">All Time</button>
         <input type="text" class="maxValue" readonly>
       </div>
-      <p>Filter by job title</p>
-      <div class="jobTitleWrap"></div>
+      <p class="mb-0">Filter by job title</p>
+      <div class="jobTitleWrap checkboxes"></div>
+      <p class="mb-0">Filter by sentiment</p>
+      <div class="sentimentWrap checkboxes">
+        <label for="sentiment-negative">
+          <input type="checkbox" id="sentiment-negative" checked value="negative">
+          <p>negative</p>
+        </label>
+        <label for="sentiment-neutral">
+          <input type="checkbox" id="sentiment-neutral" checked value="neutral">
+          <p>neutral</p>
+        </label>
+        <label for="sentiment-positive">
+          <input type="checkbox" id="sentiment-positive" checked value="positive">
+          <p>positive</p>
+        </label>
+      </div>
     </div>
     <button onclick="getFullSizeGraph()">Show Graph</button>
     <!-- <button onclick="getChordDiagram()">Show Chord Diagram</button> -->
