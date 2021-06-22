@@ -15,6 +15,7 @@
   <script defer src="{% static 'src/js/fullSizeGraph.js'%}"></script>
   <script defer src="{% static 'src/js/chordDiagram.js'%}"></script>
   <script defer src="{% static 'src/js/individualInfo.js'%}"></script>
+  <script defer src="{% static 'src/js/jobTitleFilter.js'%}"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.3.2.min.js"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.3.2.min.js"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.3.2.min.js"></script>
@@ -48,6 +49,8 @@
         <button class="allTimeButton">All Time</button>
         <input type="text" class="maxValue" readonly>
       </div>
+      <p>Filter by job title</p>
+      <div class="jobTitleWrap"></div>
     </div>
     <button onclick="getFullSizeGraph()">Show Graph</button>
     <!-- <button onclick="getChordDiagram()">Show Chord Diagram</button> -->
@@ -58,6 +61,7 @@
       <div id="graph_loading" class="loading hidden">
         <div class="inner"></div>
       </div>
+      <!-- <iframe class="hidden" id="BaseDataPlot"></iframe> -->
       <div id="BaseDataPlot" class="hidden"></div>
     </div>
     <div class="right hidden">
@@ -71,6 +75,8 @@
       </p>
       <table id="individualInfo" class="hidden">
       </table>
+      <!-- <iframe class="hidden" id="chordFrame"></iframe> -->
+      <div id="chordFrame" class="hidden"></div>
     </div>
   </div>
 </body>

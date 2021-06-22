@@ -40,12 +40,13 @@ def filterDataByTime(request, data):
     return data[ ((data["date"]>=startDate) & (data["date"] <= endDate)) ]
 
 def filterDataByJobtitle(request, data):
-    activeJobTitles = []
+    if not 'job_titles' in request.POST: return data
 
-    for i in request.POST.get("activeJobTitles").split():
+    activeJobTitles = []
+    for i in request.POST.get("job_titles").split():
         activeJobTitles.append(i)
 
-    return data[ data['fromJobtitle'] in activeJobtitles]
+    return data[ data['fromJobtitle'].item() in activeJobTitles]
 
 def filterDataBySentiment(request,data):
     sentimentValue = True if (request.POST.get("sentiment") == "positive") else False
@@ -72,6 +73,7 @@ def filter(request,data): #full filtering
 
 def filter(request,data): #full filtering
     finalData = filterDataByTime(request, data)
+    finalData = filterDataByJobtitle(request, finalData)
     #return filterDataByJobtitles(request, finalData) 
     return finalData
 
@@ -81,10 +83,6 @@ def index(request):
     return render(request, 'index.html')
 
 def makeGraph(request, df_enron):
-    
-
-    #output_notebook() #remove this when not using notebook
-
     G = networkx.from_pandas_edgelist(df_enron, 'fromId', 'toId', edge_attr=True)
 
     di = {'CEO':1,'Director':2,'Employee':3,'In House Lawyer':4,'Manager':5,'Managing Director':6,'President':7,'Trader':8,'Unknown':9,'Vice President':10}
@@ -133,16 +131,87 @@ def makeGraph(request, df_enron):
     item_text = json.dumps(json_item(plot))
 
     return item_text
+    # import holoviews as hv
+    # from holoviews import opts, dim
+    # import networkx as nx
+    # import dask.dataframe as dd
+    # from holoviews.selection import link_selections
+    # from holoviews.operation.datashader import (
+    #     datashade, dynspread, directly_connect_edges, bundle_graph, stack
+    # )
+    # from holoviews.element.graphs import layout_nodes
+    # from datashader.layout import random_layout
+    # from colorcet import fire
+    # import pandas as pd
+    # import networkx
+    # import matplotlib.pyplot as plt
+    # import numpy as np
+    # from bokeh.plotting import figure
+    # from bokeh.resources import CDN
+    # from bokeh.embed import file_html
+
+    # hv.extension('bokeh')
+    # df_chord = df_enron.sort_values('fromJobtitle')
+    # df_chord['index'] = df_chord.index
+    # df_links = df_chord.groupby(['fromId', 'toId']).count()
+    # df_links = df_links.reset_index()[['fromId','toId', 'date']]
+    # df_links.columns = ['source', 'target', 'value']
+    # x = df_chord[['fromId', 'fromJobtitle']].drop_duplicates()
+    # x.columns = ['source', 'fromJobtitle']
+
+    # df_links = pd.merge(df_links, x, on="source")
+    # df_nodes = df_chord[['fromId','fromEmail', 'fromJobtitle']].drop_duplicates().reset_index(drop=True)
+    # df_nodes.columns = ['index', 'name', 'group']
+    # df_nodes.sort_values('name')
+    # y = df_chord[['fromId', 'toId']].drop_duplicates().groupby(['fromId']).count().reset_index()
+    # y.columns = ['index', 'sizeOut']
+    # y['sizeIn'] = df_chord[['fromId', 'toId']].drop_duplicates().groupby(['toId']).count().reset_index()[['fromId']]
+    # y['size'] = y['sizeIn'] + y['sizeOut']
+    # df_nodes = pd.merge(df_nodes, y, on='index')
+    # df_nodes['size2'] = df_nodes['size']/3+8
+    # from bokeh.models import Circle
+
+    # nodes = hv.Dataset(df_nodes, 'index')
+    # edge_df = df_links
+
+    # eb_graph = hv.Graph((edge_df, nodes))
+
+    # T_graph = layout_nodes(eb_graph, layout=nx.spring_layout)
+    # #B_graph_3 = bundle_graph(T_graph)
+    # from bokeh.models import HoverTool
+    # TOOLTIPS = [
+    #     ("Person ID", "@index"),
+    #         ("people communicated with", "@size"),
+    #         ("Jobtitle","@group"),
+    # ]
+    # hover = HoverTool(tooltips=TOOLTIPS)
+    # graph_size = int(request.POST.get('graph_size', '720'))
+    # #B_graph_3.options(node_color='group', cmap='Category20', node_size='size2', show_legend=True, tools=[hover],frame_width=graph_size, frame_height=graph_size)
+    # T_graph.options(node_color='group', cmap='Category20', node_size='size2', show_legend=True, tools=[hover],frame_width=graph_size, frame_height=graph_size)
+
+    # # # json_graph = json_item(B_graph_3)
+
+    # # json_graph = json_item(T_graph)
+    # # item_text = json.dumps(json_graph)
+
+    # # return item_text
+
+    # renderer = hv.renderer('bokeh')
+    # plot = renderer.get_plot(T_graph)
+
+    # return file_html(plot, CDN, "Plot")
 
 def fullSizeGraph(request):
     
-    graph_json = makeGraph(request, filterDataByTime(request,pd.read_csv(request.FILES['csv_data'])))
-    return django.http.JsonResponse(graph_json, safe=False)
+    graph_json = makeGraph(request, filter(request,pd.read_csv(request.FILES['csv_data'])))
+    # return django.http.JsonResponse(graph_json, safe=False)
+    return JsonResponse({
+        'graph': graph_json
+    })
 
 def initialFullSizeGraph(request):
     
     df_dataset = pd.read_csv(request.FILES['csv_data'])
-    graph_json = makeGraph(request, df_dataset)
     
     startDate = df_dataset["date"].min()
     endDate = df_dataset["date"].max()
@@ -153,6 +222,10 @@ def initialFullSizeGraph(request):
     startMonth = int(startDate[5:7])
     endMonth = int(startDate[5:7])
 
+    jobTitles = df_dataset.fromJobtitle.unique().tolist()
+
+    graph_json = makeGraph(request, df_dataset)
+
     return JsonResponse({
         'graph': graph_json,
         'parameters': {
@@ -161,46 +234,85 @@ def initialFullSizeGraph(request):
                 'startMonth': startMonth,
                 'endYear': endYear,
                 'endMonth': endMonth
-            }
+            },
+            'jobTitles': jobTitles
         }
     })
 
-def chordDiagram(request):
+def chordDiagram(person_id, df_enron):
+    import holoviews as hv
+    from holoviews import opts
+    from bokeh.resources import CDN
+    from bokeh.embed import file_html
 
-    df_enron = filterDataByTime(request ,pd.read_csv(request.FILES['csv_data']))
-    names = ['Managing Director', 'In House Lawyer', 'Vice President', 'Employee', 'Unknown', 'Manager', 'Director', 'Trader', 'CEO', 'President']
+    hv.extension('bokeh')
 
-    df_chord = df_enron.groupby(['fromJobtitle', 'toJobtitle'])['date'].count()
-    df_chord = df_chord.unstack().fillna(0).astype(int)
-    df_chord = df_chord.reindex(names)
-    df_chord = df_chord[names]
+    df_chord = df_enron.sort_values('fromJobtitle')
+    df_chord['index'] = df_chord.index
 
-    matrix = df_chord.values.tolist()
+    df_links = df_chord.groupby(['fromId', 'toId']).agg({'date':'count', 'sentiment':'mean'})
+    df_links = df_links.reset_index()[['fromId','toId', 'date', 'sentiment']]
+    df_links.columns = ['source', 'target', 'value', 'sentiment']
 
-    print(Chord(matrix, names, wrap_labels=False))
+    x = df_chord[['fromId', 'fromJobtitle']].drop_duplicates()
+    x.columns = ['source', 'fromJobtitle']
 
-    return HttpResponse(Chord(matrix, names, wrap_labels=False).to_html())
+    df_links = pd.merge(df_links, x, on="source")
+    df_links.drop_duplicates(subset='source')
+
+    df_nodes = df_chord[['fromId','fromEmail', 'fromJobtitle']].drop_duplicates().reset_index(drop=True)
+    df_nodes.columns = ['index', 'name', 'group']
+    df_nodes.sort_values('name')
+    y = df_chord[['fromId', 'toId']].drop_duplicates().groupby(['fromId']).count().reset_index()
+    y.columns = ['index', 'size']
+    df_nodes = pd.merge(df_nodes, y, on='index')
+    df_nodes['size'] = df_nodes['size']/3+8
+
+    nodes = hv.Dataset(df_nodes, 'index')
+    edge_df = df_links
+
+    import seaborn as sns  # also improves the look of plots
+    sns.set()  # set Seaborn defaults
+
+    chord = hv.Chord((df_links, nodes)).select(value=(5, None))
+    chord.opts(
+        opts.Chord(cmap='Category20', edge_cmap='Category20', edge_color='sentiment', 
+                labels='name', node_color='group', edge_alpha=0.8, edge_line_width=1.5))
+
+    final_chord = chord.select(index=person_id)
+
+    plot = hv.render(final_chord, backend='bokeh')
+    item_text = json.dumps(json_item(plot))
+    return item_text
+
+    # renderer = hv.renderer('bokeh')
+    # plot = renderer.get_plot(final_chord).state
+    # return file_html(plot, CDN, "Plot")
 
 def individualInfo(request):
 
-    import matplotlib.pyplot as plt
+    # import matplotlib.pyplot as plt
 
-    plt.rcParams['figure.figsize'] = [10, 5]  # default hor./vert. size of plots, in inches
-    plt.rcParams['lines.markeredgewidth'] = 1  # to fix issue with seaborn box plots; needed after import seaborn
+    # plt.rcParams['figure.figsize'] = [10, 5]  # default hor./vert. size of plots, in inches
+    # plt.rcParams['lines.markeredgewidth'] = 1  # to fix issue with seaborn box plots; needed after import seaborn
 
-    # reveal a hint only while holding the mouse down
-    from IPython.display import HTML
-    HTML("<style>.h,.c{display:none}.t{color:#296eaa}.t:active+.h{display:block;}</style>")
+    # # reveal a hint only while holding the mouse down
+    # from IPython.display import HTML
+    # HTML("<style>.h,.c{display:none}.t{color:#296eaa}.t:active+.h{display:block;}</style>")
 
-    # hide FutureWarnings, which may show for Seaborn calls in most recent Anaconda
-    import warnings
-    warnings.filterwarnings("ignore", category=FutureWarning)
+    # # hide FutureWarnings, which may show for Seaborn calls in most recent Anaconda
+    # import warnings
+    # warnings.filterwarnings("ignore", category=FutureWarning)
+
+    person_id = int(request.POST['person_id'])
 
     df_enron = pd.read_csv(request.FILES['csv_data'])
-    Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, array_mails_sent, array_mails_received = getIndividualInfoInner(df_enron, int(request.POST['person_id']))
+    Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, array_mails_sent, array_mails_received = getIndividualInfoInner(df_enron, person_id)
     
     df_enron_tf = filterDataByTime(request,df_enron)
-    Person_ID_1_tf, ID_mail_tf, job_title_tf, mails_send_tf, mean_sentiment_send_tf, min_sentiment_send_tf, max_sentiment_send_tf, mails_received_tf, mean_sentiment_received_tf, min_sentiment_received_tf, max_sentiment_received_tf, array_mails_sent_tf, array_mails_received_tf = getIndividualInfoInner(df_enron_tf, int(request.POST['person_id']))
+    Person_ID_1_tf, ID_mail_tf, job_title_tf, mails_send_tf, mean_sentiment_send_tf, min_sentiment_send_tf, max_sentiment_send_tf, mails_received_tf, mean_sentiment_received_tf, min_sentiment_received_tf, max_sentiment_received_tf, array_mails_sent_tf, array_mails_received_tf = getIndividualInfoInner(df_enron_tf, person_id)
+
+    chord = chordDiagram(person_id, df_enron)
 
     #Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received
     return JsonResponse({
@@ -232,7 +344,8 @@ def individualInfo(request):
             'mean_sentiment_received': str(mean_sentiment_received_tf),
             'max_sentiment_received': str(max_sentiment_received_tf),
             'array_mails_received': array_mails_received_tf,
-        }
+        },
+        'chord': chord
     })
 
 def getIndividualInfoInner(df_enron, person_id):

@@ -1,7 +1,8 @@
 const individual = document.querySelector('#individualInfo')
 const individual_loading = document.querySelector('#individual_loading')
 const right = document.querySelector('.mainRow > .right')
-const meta =   document.querySelector('#meta')
+const meta = document.querySelector('#meta')
+const chordFrame = document.querySelector('#chordFrame')
 
 let justAClick = false;
 
@@ -25,6 +26,7 @@ root.addEventListener('mouseup', e => {
   individual_loading.classList.remove('hidden')
   individual.classList.add('hidden')
   meta.classList.add('hidden')
+  chordFrame.classList.add('hidden')
   const formData = new FormData()
   formData.append('person_id', idElement.innerHTML)
   formData.append('start_date', document.querySelector('.minValue').getAttribute('data-date'))
@@ -39,7 +41,10 @@ root.addEventListener('mouseup', e => {
       return
     }
     meta.classList.remove('hidden')
-    fillIndividualInfo(JSON.parse(event.target.response))
+    chordFrame.classList.remove('hidden')
+    const data = JSON.parse(event.target.response)
+    showChord(data.chord)
+    fillIndividualInfo(data)
   })
   xhttp.open("POST", "/individual-info", true);
   xhttp.send(formData);
@@ -89,4 +94,11 @@ const emailArrayHtml = data => {
   }
   html += '</td>'
   return html
+}
+
+const showChord = data => {
+  chordFrame.innerHTML = ''
+  Bokeh.embed.embed_item(JSON.parse(data), 'chordFrame')
+  // chordFrame.setAttribute('srcdoc', data)
+  // chordFrame.style.height = chordFrame.contentWindow.document.documentElement.scrollHeight + 'px'
 }

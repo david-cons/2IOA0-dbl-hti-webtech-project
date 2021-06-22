@@ -247,3 +247,22 @@ tr.paddingBottom td {
 tr:hover {
   color: #afa;
 }
+
+.jobTitleWrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.jobTitleWrap * {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+.jobTitleWrap p {
+  margin: 0 1em 0 0.5em;
+}
+
+iframe {
+  width: 100%;
+  border: none;
+}

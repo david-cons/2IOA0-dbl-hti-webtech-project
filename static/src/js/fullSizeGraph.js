@@ -35,6 +35,10 @@ const getFullSizeGraph = () => {
 
   let formData = new FormData()
 
+  const jobTitles = getSelectedJobTitles()
+  if (jobTitles) {
+    formData.append('job_titles', jobTitles)
+  }
   formData.append('start_date', document.querySelector('.minValue').getAttribute('data-date'))
   formData.append('end_date', document.querySelector('.maxValue').getAttribute('data-date'))
   formData.append('graph_size', calculateGraphSize())
@@ -65,10 +69,11 @@ const handleInitialGraphCall = event => {
 
   response = JSON.parse(event.target.response)
 
-  Bokeh.embed.embed_item(JSON.parse(response.graph), rootId)
-    .then(resizePlot)
+  showMainGraph(response.graph)
+  resizePlot()
   
   initTimeSlider(response.parameters.timeSlider)
+  initJobTitleFilter(response.parameters.jobTitles)
 }
 
 const handleGraphCall = event => {
@@ -80,12 +85,20 @@ const handleGraphCall = event => {
   }
 
   initialOverlay.classList.add('hidden')
-  Bokeh.embed.embed_item(JSON.parse(JSON.parse(event.target.response)), rootId)
+  
+  response = JSON.parse(event.target.response)
+  showMainGraph(response.graph)
+  resizePlot()
+}
+
+const showMainGraph = data => {
+  Bokeh.embed.embed_item(JSON.parse(data), rootId)
     .then(resizePlot)
 }
 
 const resizePlot = () => {
-  root.scrollIntoView({behavior: 'smooth'})
+  root.scrollIntoView({ behavior: 'smooth' })
+  //root.style.height = root.contentWindow.document.documentElement.scrollHeight + 'px'
 }
 
 const calculateGraphSize = () => {
