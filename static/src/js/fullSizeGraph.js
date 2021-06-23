@@ -1,6 +1,7 @@
 const rootId = 'BaseDataPlot'
 const root = document.querySelector('#'+rootId)
 const graph_loading = document.querySelector('#graph_loading')
+const filters = document.querySelector('.filters')
 
 const prepareGraphCall = () => {
   errorP.classList.add('hidden')
@@ -31,6 +32,8 @@ const initialGraphCall = () => {
 }
 
 const getFullSizeGraph = () => {
+  right.classList.add("hidden")
+
   prepareGraphCall()
 
   let formData = new FormData()
@@ -64,6 +67,7 @@ const handleInitialGraphCall = event => {
 
   response = JSON.parse(event.target.response)
 
+  filters.classList.remove('hidden')
   showMainGraph(response.graph)
   resizePlot()
   
