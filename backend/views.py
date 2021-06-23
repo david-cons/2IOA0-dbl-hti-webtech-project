@@ -46,7 +46,6 @@ def filterDataByJobtitle(request, data):
     toMask = data["toJobtitle"] == '___'
 
     for i in request.POST.get("job_titles").split(','):
-        print(i)
         fromMask |= (data["fromJobtitle"] == i)
         toMask |= (data["toJobtitle"] == i)
 
@@ -371,9 +370,8 @@ def individualInfo(request):
     })
 
 def getIndividualInfoInner(df_enron, person_id):
-    Person_ID_1 = person_id
-    person_send = df_enron['fromId'] == Person_ID_1
-    person_received = df_enron['toId'] == Person_ID_1
+    person_send = df_enron['fromId'] == person_id
+    person_received = df_enron['toId'] == person_id
     df_1 = df_enron[person_send]
     df_2 = df_1[['fromEmail']]
     df_3 = df_2.describe()
@@ -403,5 +401,5 @@ def getIndividualInfoInner(df_enron, person_id):
         emails_received = emails_received_2[['count']].to_json()
     except:
         pass
-    return Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, emails_sent, emails_received
+    return person_id, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, emails_sent, emails_received
     #from bokeh.io import output_notebook, show, save

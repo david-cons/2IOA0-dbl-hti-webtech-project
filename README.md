@@ -5,7 +5,7 @@ year 1 dbl project
 0. Open a directory with an IDE (VS Code)
 1. Install git: https://git-scm.com/download/win
 2. Clone the project: `git clone https://github.com/david-cons/2IOA0-dbl-hti-webtech-project`
-3. Go to the directory: `cd 2IOA0-dbl-hti-webtech-project/source`
+3. Go to the directory: `cd 2IOA0-dbl-hti-webtech-project`
 4. Install Python
 5. Install pipenv to use a sort of virtual environment `pip install pipenv` (you may need to add it to your PATH)
 6. Install libaries `pipenv install`
