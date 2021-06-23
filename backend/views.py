@@ -42,11 +42,15 @@ def filterDataByTime(request, data):
 def filterDataByJobtitle(request, data):
     if not 'job_titles' in request.POST: return data
 
-    activeJobTitles = []
-    for i in request.POST.get("job_titles").split():
-        activeJobTitles.append(i)
+    fromMask = data["fromJobtitle"] == '___'
+    toMask = data["toJobtitle"] == '___'
 
-    return data[ data['fromJobtitle'].item() in activeJobTitles]
+    for i in request.POST.get("job_titles").split(','):
+        print(i)
+        fromMask |= (data["fromJobtitle"] == i)
+        toMask |= (data["toJobtitle"] == i)
+
+    return data[(fromMask & toMask)]
 
 def filterDataBySentiment(request,data):
     mask = data["sentiment"] == 10

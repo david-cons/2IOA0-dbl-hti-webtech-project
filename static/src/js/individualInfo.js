@@ -3,24 +3,33 @@ const individual_loading = document.querySelector('#individual_loading')
 const right = document.querySelector('.mainRow > .right')
 const meta = document.querySelector('#meta')
 const chordFrame = document.querySelector('#chordFrame')
+const node_id_input = document.querySelector('.node_id')
 
 let justAClick = false;
 
-// root is the root of the full size graph
-root.addEventListener('mousedown', e => {
-  justAClick = true
+const SearchById = () => {
+  const id = node_id_input.value
+  if (id > 0) {
+    makeIndividualInfoRequest(null, id)
+  }
+}
+node_id_input.addEventListener("keyup", e => {
+  if (e.keyCode === 13) {
+    SearchById()
+  }
 })
-root.addEventListener('mousemove', e => {
-  justAClick = false
-})
-root.addEventListener('mouseup', e => {
-  const idElement = document.querySelector('.bk-tooltip .bk .bk .bk-tooltip-row-value span')
-  if (idElement.offsetWidth === 0) {
-    if (justAClick) {
-      right.classList.add('hidden')
+
+const makeIndividualInfoRequest = (e, id = null) => {
+  if (id === null) {
+    const idElement = document.querySelector('.bk-tooltip .bk .bk .bk-tooltip-row-value span')
+    if (idElement.offsetWidth === 0) {
+      if (justAClick) {
+        right.classList.add('hidden')
+      }
+      justAClick = false
+      return
     }
-    justAClick = false
-    return
+    id = idElement.innerHTML
   }
   right.classList.remove('hidden')
   individual_loading.classList.remove('hidden')
@@ -28,7 +37,7 @@ root.addEventListener('mouseup', e => {
   meta.classList.add('hidden')
   chordFrame.classList.add('hidden')
   const formData = new FormData()
-  formData.append('person_id', idElement.innerHTML)
+  formData.append('person_id', id)
   makeGeneralFilters(formData)
   makeFormDataFromCsvInput(formData)
   const xhttp = new XMLHttpRequest();
@@ -39,6 +48,8 @@ root.addEventListener('mouseup', e => {
       individual.innerHTML = event.target.statusText
       return
     }
+    node_id_input.value = ''
+    node_id_input.blur()
     meta.classList.remove('hidden')
     chordFrame.classList.remove('hidden')
     const data = JSON.parse(event.target.response)
@@ -47,12 +58,12 @@ root.addEventListener('mouseup', e => {
   })
   xhttp.open("POST", "/individual-info", true);
   xhttp.send(formData);
-})
+}
 
 const fillIndividualInfo = data => {
   document.querySelector('#meta .id').innerHTML = '#' + data.meta.person_id
   const email = data.meta.mail_address
-  document.querySelector('#meta .email').innerHTML = email.substring(0, email.indexOf('@'))
+  document.querySelector('#meta .email').innerHTML = email.substring(0, email.indexOf('@')).replace(/\./g, ' ')
   document.querySelector('#meta .job_title').innerHTML = data.meta.job_title
   const keys = Object.keys(data.all_time)
   let html = '<tr class="text-right"><td colspan="2"><strong>filtered data</strong></td><td>all data<td></tr>'
@@ -102,3 +113,12 @@ const showChord = data => {
   // chordFrame.setAttribute('srcdoc', data)
   // chordFrame.style.height = chordFrame.contentWindow.document.documentElement.scrollHeight + 'px'
 }
+
+// root is the root of the full size graph
+root.addEventListener('mousedown', e => {
+  justAClick = true
+})
+root.addEventListener('mousemove', e => {
+  justAClick = false
+})
+root.addEventListener('mouseup', makeIndividualInfoRequest)

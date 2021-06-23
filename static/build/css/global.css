@@ -219,3 +219,12 @@ tr:hover {
 iframe {
   width: 100%;
   border: none; }
+
+.search_by_id {
+  display: block; }
+
+.search_by_id * {
+  display: inline; }
+
+.search_by_id input {
+  width: 5rem; }
