@@ -18,3 +18,6 @@ year 1 dbl project
 2. Go to static: `cd static`
 3. Install node packages: `npm install`
 4. After making changes to .scss files build the assest: `npm run watch`
+
+## Clear Web: 
+You can access the website on the clear web by following this link : https://webtech-group-13.herokuapp.com/
