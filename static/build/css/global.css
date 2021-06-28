@@ -198,7 +198,7 @@ table {
 .email_array.borders div {
   box-shadow: -1px 0 0 0 #19103d; }
 
-tr.paddingBottom td {
+td.paddingBottom {
   padding-bottom: 1rem; }
 
 tr:hover {

@@ -348,16 +348,17 @@ def individualInfo(request):
             'mean_sentiment_sent': str(mean_sentiment_send),
             'max_sentiment_sent': str(max_sentiment_send),
             'array_mails_sent': array_mails_sent,
+            'most_emails_sent_to' : str(p_most_sent_emails),
+            'hspace_1':'',
             'mails_received': str(mails_received),
             'min_sentiment_received': str(min_sentiment_received),
             'mean_sentiment_received': str(mean_sentiment_received),
             'max_sentiment_received': str(max_sentiment_received),
-            'most_emails_received_from' : str(p_most_received_emails),
             'number_received' : str(most_received_emails_nr),
-            'most_emails_sent_to' : str(p_most_sent_emails),
             'number_sent' : str(most_sent_emails_nr),
             'array_mails_received': array_mails_received,
-
+            'most_emails_received_from' : str(p_most_received_emails),
+            'hspace_2':' ',
         },
         'time_filtered': {
             'mails_sent': str(mails_send_tf),
@@ -365,15 +366,17 @@ def individualInfo(request):
             'mean_sentiment_sent': str(mean_sentiment_send_tf),
             'max_sentiment_sent': str(max_sentiment_send_tf),
             'array_mails_sent': array_mails_sent_tf,
+            'most_emails_sent_to' : str(p_most_sent_emails_tf),
+            'hspace_1':' ',
             'mails_received': str(mails_received_tf),
             'min_sentiment_received': str(min_sentiment_received_tf),
             'mean_sentiment_received': str(mean_sentiment_received_tf),
             'max_sentiment_received': str(max_sentiment_received_tf),
-            'most_emails_received_from' : str(p_most_received_emails_tf),
             'number_received' : str(most_received_emails_nr_tf),
-            'most_emails_sent_to' : str(p_most_sent_emails_tf),
             'number_sent' : str(most_sent_emails_nr_tf),
             'array_mails_received': array_mails_received_tf,
+            'most_emails_received_from' : str(p_most_received_emails_tf),
+            'hspace_2':' ',
         },
         'chord': chord
     })
@@ -396,7 +399,6 @@ def getIndividualInfoInner(df_enron, person_id):
     mean_sentiment_received = df_received['sentiment'].mean()
     min_sentiment_received = df_received['sentiment'].min()
     max_sentiment_received = df_received['sentiment'].max()
-    emails_sent = 'none'
 
 
     
@@ -412,6 +414,7 @@ def getIndividualInfoInner(df_enron, person_id):
     person_with_most_sent_emails =  person.index.values[0]
     nr_sent_emails = person.values[0][0]
 
+    emails_sent = 'none'
     try:
         df_emails_sent_1 = df_1.groupby('toId').describe()
         df_emails_sent_2 = df_emails_sent_1['fromId']
@@ -425,5 +428,6 @@ def getIndividualInfoInner(df_enron, person_id):
         emails_received = emails_received_2[['count']].to_json()
     except:
         pass
+
     return person_id, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, emails_sent, emails_received, person_with_most_received_emails, nr_received_emails, person_with_most_sent_emails, nr_sent_emails
     #from bokeh.io import output_notebook, show, save

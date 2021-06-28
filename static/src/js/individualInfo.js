@@ -72,8 +72,10 @@ const fillIndividualInfo = data => {
     html += '<tr>'
     if (key.substring(0, 6) === 'array_') {
       html += emailArrayHtml(data.time_filtered[key])
-      html += '</tr><tr class="paddingBottom">'
+      html += '</tr><tr>'
       html += emailArrayHtml(data.all_time[key])
+    } else if (key.substring(0, 7) === 'hspace_') {
+      html += '<td colspan="3" class="paddingBottom"></td>'
     } else {
       html += '<td>' + key.replace(/_/g, ' ') + '</td>'
       html += '<td class="text-right"><strong>' + Math.round(data.time_filtered[key]*100)/100 + '</strong></td>'
