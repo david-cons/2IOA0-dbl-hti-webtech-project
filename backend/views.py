@@ -328,10 +328,10 @@ def individualInfo(request):
     person_id = int(request.POST['person_id'])
 
     df_enron = pd.read_csv(request.FILES['csv_data'])
-    Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, array_mails_sent, array_mails_received, p_most_received_emails, most_received_emails_nr, p_most_sent_emails, most_sent_emails_nr = getIndividualInfoInner(df_enron, person_id)
+    Person_ID_1, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, array_mails_sent, array_mails_received, p_most_received_emails, most_received_emails_nr, p_most_received_emails_email, p_most_received_emails_job_title, p_most_sent_emails, most_sent_emails_nr, p_most_sent_emails_email, p_most_sent_emails_job_title = getIndividualInfoInner(df_enron, person_id)
     
     df_enron_tf = filter(request,df_enron)
-    Person_ID_1_tf, ID_mail_tf, job_title_tf, mails_send_tf, mean_sentiment_send_tf, min_sentiment_send_tf, max_sentiment_send_tf, mails_received_tf, mean_sentiment_received_tf, min_sentiment_received_tf, max_sentiment_received_tf, array_mails_sent_tf, array_mails_received_tf, p_most_received_emails_tf, most_received_emails_nr_tf, p_most_sent_emails_tf, most_sent_emails_nr_tf = getIndividualInfoInner(df_enron_tf, person_id)
+    Person_ID_1_tf, ID_mail_tf, job_title_tf, mails_send_tf, mean_sentiment_send_tf, min_sentiment_send_tf, max_sentiment_send_tf, mails_received_tf, mean_sentiment_received_tf, min_sentiment_received_tf, max_sentiment_received_tf, array_mails_sent_tf, array_mails_received_tf, p_most_received_emails_tf, p_most_received_emails_email_tf, p_most_received_emails_job_title_tf, most_received_emails_nr_tf, p_most_sent_emails_tf, most_sent_emails_nr_tf, p_most_sent_emails_email_tf, p_most_sent_emails_job_title_tf = getIndividualInfoInner(df_enron_tf, person_id)
 
     chord = chordDiagram(person_id, df_enron)
 
@@ -348,7 +348,12 @@ def individualInfo(request):
             'mean_sentiment_sent': str(mean_sentiment_send),
             'max_sentiment_sent': str(max_sentiment_send),
             'array_mails_sent': array_mails_sent,
-            'most_emails_sent_to' : str(p_most_sent_emails),
+            'most_emails_sent_to' : {
+                'id': str(p_most_sent_emails),
+                'email': str(p_most_sent_emails_email),
+                'job_title': str(p_most_sent_emails_job_title),
+                'number': str(most_sent_emails_nr),
+            },
             'hspace_1':'',
             'mails_received': str(mails_received),
             'min_sentiment_received': str(min_sentiment_received),
@@ -357,7 +362,12 @@ def individualInfo(request):
             'number_received' : str(most_received_emails_nr),
             'number_sent' : str(most_sent_emails_nr),
             'array_mails_received': array_mails_received,
-            'most_emails_received_from' : str(p_most_received_emails),
+            'most_emails_received_from' : {
+                'id': str(p_most_received_emails),
+                'email': str(p_most_received_emails_email),
+                'job_title': str(p_most_received_emails_job_title),
+                'number': str(most_received_emails_nr),
+            },
             'hspace_2':' ',
         },
         'time_filtered': {
@@ -366,7 +376,12 @@ def individualInfo(request):
             'mean_sentiment_sent': str(mean_sentiment_send_tf),
             'max_sentiment_sent': str(max_sentiment_send_tf),
             'array_mails_sent': array_mails_sent_tf,
-            'most_emails_sent_to' : str(p_most_sent_emails_tf),
+            'most_emails_sent_to' : {
+                'id': str(p_most_sent_emails_tf),
+                'email': str(p_most_sent_emails_email_tf),
+                'job_title': str(p_most_sent_emails_job_title_tf),
+                'number': str(most_sent_emails_nr_tf),
+            },
             'hspace_1':' ',
             'mails_received': str(mails_received_tf),
             'min_sentiment_received': str(min_sentiment_received_tf),
@@ -375,7 +390,12 @@ def individualInfo(request):
             'number_received' : str(most_received_emails_nr_tf),
             'number_sent' : str(most_sent_emails_nr_tf),
             'array_mails_received': array_mails_received_tf,
-            'most_emails_received_from' : str(p_most_received_emails_tf),
+            'most_emails_received_from_tf' : {
+                'id': str(p_most_received_emails_tf),
+                'email': str(p_most_received_emails_email_tf),
+                'job_title': str(p_most_received_emails_job_title_tf),
+                'number': str(most_received_emails_nr_tf),
+            },
             'hspace_2':' ',
         },
         'chord': chord
@@ -400,18 +420,19 @@ def getIndividualInfoInner(df_enron, person_id):
     min_sentiment_received = df_received['sentiment'].min()
     max_sentiment_received = df_received['sentiment'].max()
 
-
-    
-
     df_person = df_enron[person_send | person_received]
     person = df_person.groupby(["fromId"])[["fromEmail"]].count().sort_values(by = "fromEmail", ascending = False).iloc[[0]]
 
     person_with_most_received_emails = person.index.values[0]
+    person_with_most_received_emails_email = getEmailAddressFromId(df_enron, person_with_most_received_emails)
+    person_with_most_received_emails_job_title = getJobTitleFromId(df_enron, person_with_most_received_emails)
     nr_received_emails = person.values[0][0]
 
     person = df_person.groupby(["toId"])[["toEmail"]].count().sort_values(by = "toEmail", ascending = False).iloc[[0]]
 
     person_with_most_sent_emails =  person.index.values[0]
+    person_with_most_sent_emails_email = getEmailAddressFromId(df_enron, person_with_most_sent_emails)
+    person_with_most_sent_emails_job_title = getJobTitleFromId(df_enron, person_with_most_sent_emails)
     nr_sent_emails = person.values[0][0]
 
     emails_sent = 'none'
@@ -429,5 +450,21 @@ def getIndividualInfoInner(df_enron, person_id):
     except:
         pass
 
-    return person_id, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, emails_sent, emails_received, person_with_most_received_emails, nr_received_emails, person_with_most_sent_emails, nr_sent_emails
+    return person_id, ID_mail, job_title, mails_send, mean_sentiment_send, min_sentiment_send, max_sentiment_send, mails_received, mean_sentiment_received, min_sentiment_received, max_sentiment_received, emails_sent, emails_received, person_with_most_received_emails, person_with_most_received_emails_email, person_with_most_received_emails_job_title, nr_received_emails, person_with_most_sent_emails, nr_sent_emails, person_with_most_sent_emails_email, person_with_most_sent_emails_job_title
     #from bokeh.io import output_notebook, show, save
+
+def getEmailAddressFromId(df, person_id):
+    if not df[df["fromId"] == person_id].empty:
+        return df[df["fromId"]== person_id]["fromEmail"].iloc[0]
+    elif not df[df["toId"] == person_id].empty:
+        return df[df["toId"]== person_id]["toEmail"].iloc[0]
+    else:
+        return None
+
+def getJobTitleFromId(df, person_id):
+    if not df[df["fromId"] == person_id].empty:
+        return df[df["fromId"]== person_id]["fromJobtitle"].iloc[0]
+    elif not df[df["toId"] == person_id].empty:
+        return df[df["toId"]== person_id]["toJobtitle"].iloc[0]
+    else:
+        return None

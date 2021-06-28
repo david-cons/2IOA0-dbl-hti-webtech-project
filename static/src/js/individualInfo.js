@@ -76,6 +76,9 @@ const fillIndividualInfo = data => {
       html += emailArrayHtml(data.all_time[key])
     } else if (key.substring(0, 7) === 'hspace_') {
       html += '<td colspan="3" class="paddingBottom"></td>'
+    } else if (typeof data.time_filtered[key] === 'object') {
+      console.log('object')
+      console.log(data.time_filtered[key])
     } else {
       html += '<td>' + key.replace(/_/g, ' ') + '</td>'
       html += '<td class="text-right"><strong>' + Math.round(data.time_filtered[key]*100)/100 + '</strong></td>'
