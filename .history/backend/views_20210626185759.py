@@ -352,11 +352,11 @@ def individualInfo(request):
             'min_sentiment_received': str(min_sentiment_received),
             'mean_sentiment_received': str(mean_sentiment_received),
             'max_sentiment_received': str(max_sentiment_received),
-            'most_emails_received_from' : str(p_most_received_emails),
-            'number_received' : str(most_received_emails_nr),
-            'most_emails_sent_to' : str(p_most_sent_emails),
-            'number_sent' : str(most_sent_emails_nr),
             'array_mails_received': array_mails_received,
+            'person_most_emails_received' : str(p_most_received_emails),
+            'number_received' : str(most_received_emails_nr),
+            'person_most_emails_sent' : str(p_most_sent_emails),
+            'number_sent' : str(most_sent_emails_nr),
 
         },
         'time_filtered': {
@@ -369,11 +369,11 @@ def individualInfo(request):
             'min_sentiment_received': str(min_sentiment_received_tf),
             'mean_sentiment_received': str(mean_sentiment_received_tf),
             'max_sentiment_received': str(max_sentiment_received_tf),
-            'most_emails_received_from' : str(p_most_received_emails_tf),
-            'number_received' : str(most_received_emails_nr_tf),
-            'most_emails_sent_to' : str(p_most_sent_emails_tf),
-            'number_sent' : str(most_sent_emails_nr_tf),
             'array_mails_received': array_mails_received_tf,
+            'person_most_emails_received' : str(p_most_received_emails_tf),
+            'number_received' : str(most_received_emails_nr_tf),
+            'person_most_emails_sent' : str(p_most_sent_emails_tf),
+            'number_sent' : str(most_sent_emails_nr_tf),
         },
         'chord': chord
     })
@@ -402,14 +402,14 @@ def getIndividualInfoInner(df_enron, person_id):
     
 
     df_person = df_enron[person_send | person_received]
-    person = df_person.groupby(["fromId"])[["fromEmail"]].count().sort_values(by = "fromEmail", ascending = False).iloc[[0]]
+    person = df_person.groupby(["fromEmail"])[["fromId"]].count().sort_values(by = "fromId", ascending = False).iloc[[0]]
 
-    person_with_most_received_emails = person.index.values[0]
+    person_with_most_received_emails = person.index.value[0]
     nr_received_emails = person.values[0][0]
 
-    person = df_person.groupby(["toId"])[["toEmail"]].count().sort_values(by = "toEmail", ascending = False).iloc[[0]]
+    person = df_person.groupby(["toEmail"])[["toId"]].count().sort_values(by = "toId", ascending = False).iloc[[0]]
 
-    person_with_most_sent_emails =  person.index.values[0]
+    person_with_most_sent_emails =  person.index.values[0]]
     nr_sent_emails = person.values[0][0]
 
     try:
