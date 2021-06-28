@@ -359,8 +359,6 @@ def individualInfo(request):
             'min_sentiment_received': str(min_sentiment_received),
             'mean_sentiment_received': str(mean_sentiment_received),
             'max_sentiment_received': str(max_sentiment_received),
-            'number_received' : str(most_received_emails_nr),
-            'number_sent' : str(most_sent_emails_nr),
             'array_mails_received': array_mails_received,
             'most_emails_received_from' : {
                 'id': str(p_most_received_emails),
@@ -387,10 +385,8 @@ def individualInfo(request):
             'min_sentiment_received': str(min_sentiment_received_tf),
             'mean_sentiment_received': str(mean_sentiment_received_tf),
             'max_sentiment_received': str(max_sentiment_received_tf),
-            'number_received' : str(most_received_emails_nr_tf),
-            'number_sent' : str(most_sent_emails_nr_tf),
             'array_mails_received': array_mails_received_tf,
-            'most_emails_received_from_tf' : {
+            'most_emails_received_from' : {
                 'id': str(p_most_received_emails_tf),
                 'email': str(p_most_received_emails_email_tf),
                 'job_title': str(p_most_received_emails_job_title_tf),

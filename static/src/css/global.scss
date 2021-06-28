@@ -187,6 +187,8 @@ p.error {
 }
 table {
   width: 100%;
+  z-index: 1;
+  position: relative;
 }
 
 .email_array > * {
@@ -196,6 +198,7 @@ table {
   div {
     background-color: white;
     height: 100%;
+    cursor: help;
   }
   p {
     position: absolute;
@@ -248,8 +251,41 @@ td.paddingBottom {
   padding-bottom: 1rem;
 }
 
-tr:hover {
+#individualInfo > tbody > tr:hover {
   color: #afa;
+}
+
+.has-tooltip {
+  position: relative;
+  cursor: help;
+  &:hover .tooltip {
+    display: block;
+  }
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  color:rgb(25, 16, 61);
+  text-align: left;
+  display: none;
+  width: max-content;
+  box-shadow: 0 0 0.3rem rgba(0,0,0,0.25);
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 0.25rem solid transparent;
+    border-bottom-color: white;
+    border-right-color: white;
+    box-sizing: border-box;
+    pointer-events: none;
+  }
 }
 
 .checkboxes {
