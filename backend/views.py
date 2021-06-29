@@ -247,6 +247,11 @@ def initialFullSizeGraph(request):
 
     graph_json = makeGraph(request, df_dataset)
 
+    df_dataset["date"] = df_dataset["date"].str[0:7]
+    monthly_mean_sentiment = df_dataset.groupby("date").mean()["sentiment"].to_numpy()
+    factor = max(-np.min(monthly_mean_sentiment), np.max(monthly_mean_sentiment))
+    monthly_mean_sentiment *= 1/factor
+
     return JsonResponse({
         'graph': graph_json,
         'parameters': {
@@ -256,6 +261,7 @@ def initialFullSizeGraph(request):
                 'endYear': endYear,
                 'endMonth': endMonth
             },
+            'monthly_mean_sentiment': monthly_mean_sentiment.tolist(),
             'jobTitles': jobTitles
         }
     })
@@ -263,8 +269,8 @@ def initialFullSizeGraph(request):
 def chordDiagram(person_id, df_enron):
     import holoviews as hv
     from holoviews import opts
-    from bokeh.resources import CDN
-    from bokeh.embed import file_html
+    #from bokeh.resources import CDN
+    #from bokeh.embed import file_html
 
     hv.extension('bokeh')
 
@@ -291,9 +297,6 @@ def chordDiagram(person_id, df_enron):
 
     nodes = hv.Dataset(df_nodes, 'index')
     edge_df = df_links
-
-    import seaborn as sns  # also improves the look of plots
-    sns.set()  # set Seaborn defaults
 
     chord = hv.Chord((df_links, nodes)).select(value=(5, None))
     chord.opts(

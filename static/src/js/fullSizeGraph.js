@@ -73,6 +73,7 @@ const handleInitialGraphCall = event => {
   
   initTimeSlider(response.parameters.timeSlider)
   initJobTitleFilter(response.parameters.jobTitles)
+  showSentimentGradient(response.parameters.monthly_mean_sentiment)
 }
 
 const handleGraphCall = event => {
@@ -106,7 +107,7 @@ const calculateGraphSize = () => {
   return Math.floor(Math.min(maxHeight, maxWidth) - 50)
 }
 
-window.addEventListener('resize', () => { window.setTimeout(resizePlot, 1) })
+// window.addEventListener('resize', () => { window.setTimeout(resizePlot, 1) })
 
 const makeGeneralFilters = formData => {
   const jobTitles = getSelectedJobTitles()
