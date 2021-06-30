@@ -92,11 +92,14 @@ def filter(request,data): #full filtering
     finalData = filterDataByTime(request, data)
     finalData = filterDataByJobtitle(request, finalData)
     finalData = filterDataBySentiment(request, finalData)
+    #return filterDataByJobtitles(request, finalData) 
     return finalData
 
 ################################################################
 
 #######Mean Sentiment##########
+def getMeanSentiment(df):
+    df[["sentiment"]].mean().values[0]
 
 def index(request):
     return render(request, 'index.html')
@@ -221,7 +224,7 @@ def makeGraph(request, df_enron):
     # renderer = hv.renderer('bokeh')
     # plot = renderer.get_plot(T_graph)
 
-    # return file_html(plot, CDN,"Plot")
+    # return file_html(plot, CDN, "Plot")
 
 def fullSizeGraph(request):
     
@@ -401,22 +404,14 @@ def getIndividualInfoInner(df_enron, person_id):
 
 
     
-    #implement try catch for people which only send emails to themselves
+
     df_person = df_enron[person_send | person_received]
-    person = None
-    try:
-        person = df_person.groupby(["fromId"])[["fromEmail"]].count().sort_values(by = "fromEmail", ascending = False).iloc[[1]]
-    except:
-        person = df_person.groupby(["fromId"])[["fromEmail"]].count().sort_values(by = "fromEmail", ascending = False).iloc[[0]]
+    person = df_person.groupby(["fromId"])[["fromEmail"]].count().sort_values(by = "fromEmail", ascending = False).iloc[[0]]
 
     person_with_most_received_emails = person.index.values[0]
     nr_received_emails = person.values[0][0]
 
-    person = None
-    try:
-        person = df_person.groupby(["toId"])[["toEmail"]].count().sort_values(by = "toEmail", ascending = False).iloc[[1]]
-    except:
-        person = df_person.groupby(["toId"])[["toEmail"]].count().sort_values(by = "toEmail", ascending = False).iloc[[0]]
+    person = df_person.groupby(["toId"])[["toEmail"]].count().sort_values(by = "toEmail", ascending = False).iloc[[0]]
 
     person_with_most_sent_emails =  person.index.values[0]
     nr_sent_emails = person.values[0][0]

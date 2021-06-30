@@ -401,22 +401,14 @@ def getIndividualInfoInner(df_enron, person_id):
 
 
     
-    #implement try catch for people which only send emails to themselves
+
     df_person = df_enron[person_send | person_received]
-    person = None
-    try:
-        person = df_person.groupby(["fromId"])[["fromEmail"]].count().sort_values(by = "fromEmail", ascending = False).iloc[[1]]
-    except:
-        person = df_person.groupby(["fromId"])[["fromEmail"]].count().sort_values(by = "fromEmail", ascending = False).iloc[[0]]
+    person = df_person.groupby(["fromId"])[["fromEmail"]].count().sort_values(by = "fromEmail", ascending = False).iloc[[1]]
 
     person_with_most_received_emails = person.index.values[0]
     nr_received_emails = person.values[0][0]
 
-    person = None
-    try:
-        person = df_person.groupby(["toId"])[["toEmail"]].count().sort_values(by = "toEmail", ascending = False).iloc[[1]]
-    except:
-        person = df_person.groupby(["toId"])[["toEmail"]].count().sort_values(by = "toEmail", ascending = False).iloc[[0]]
+    person = df_person.groupby(["toId"])[["toEmail"]].count().sort_values(by = "toEmail", ascending = False).iloc[[1]]
 
     person_with_most_sent_emails =  person.index.values[0]
     nr_sent_emails = person.values[0][0]
