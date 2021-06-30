@@ -419,12 +419,15 @@ def getIndividualInfoInner(df_enron, person_id):
     mean_sentiment_received = df_received['sentiment'].mean()
     min_sentiment_received = df_received['sentiment'].min()
     max_sentiment_received = df_received['sentiment'].max()
+<<<<<<< HEAD
     emails_sent = 'none'
 
 
     
     #implement try catch for people which only send emails to themselves
+=======
 
+>>>>>>> b94b69c7903fb6df73ddd7e57b563956c0c9f45c
     df_person = df_enron[person_send | person_received]
     person = None
     try:

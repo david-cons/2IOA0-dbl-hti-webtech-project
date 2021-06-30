@@ -72,8 +72,18 @@ const fillIndividualInfo = data => {
     html += '<tr>'
     if (key.substring(0, 6) === 'array_') {
       html += emailArrayHtml(data.time_filtered[key])
-      html += '</tr><tr class="paddingBottom">'
+      html += '</tr><tr>'
       html += emailArrayHtml(data.all_time[key])
+    } else if (key.substring(0, 7) === 'hspace_') {
+      html += '<td colspan="3" class="paddingBottom"></td>'
+    } else if (typeof data.all_time[key] === 'object') {
+      html += '<td>' + key.replace(/_/g, ' ') + '</td>'
+      html += '<td class="text-right has-tooltip"><strong>#' + data.time_filtered[key].id + '</strong>'
+      html += makeTooltipHtml(data.time_filtered[key])
+      html += '</td>'
+      html += '<td class="text-right has-tooltip">#' + data.all_time[key].id
+      html += makeTooltipHtml(data.all_time[key])
+      html += '</td>'
     } else {
       html += '<td>' + key.replace(/_/g, ' ') + '</td>'
       html += '<td class="text-right"><strong>' + Math.round(data.time_filtered[key]*100)/100 + '</strong></td>'
@@ -105,6 +115,16 @@ const emailArrayHtml = data => {
   }
   html += '</td>'
   return html
+}
+
+const makeTooltipHtml = data => {
+  let html = '<table class="tooltip">'
+  const keys = Object.keys(data)
+  for (let i = 0; i < keys.length; i++) {
+    html += '<tr><td>' + keys[i].replace(/_/g, ' ') + '</td>'
+    html += '<td>' + data[keys[i]] + '</td></tr>'
+  }
+  return html + '</table>'
 }
 
 const showChord = data => {
